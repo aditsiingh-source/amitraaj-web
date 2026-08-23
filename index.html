@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>The Footprints of Big Money</title>
+    <title>For Traders By Traders | amitraaj.in</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -161,7 +161,7 @@
 
         /* Hero Section */
         .hero-section {
-            padding: 20px 0 60px 0;
+            padding: 20px 0 50px 0;
             border-bottom: 1px solid var(--border);
         }
 
@@ -179,13 +179,24 @@
             letter-spacing: -0.8px;
         }
 
+        .hero-mission-bold {
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            font-size: clamp(1.1rem, 2.2vw, 1.35rem);
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            line-height: 1.4;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
         .hero-subtitle-small {
             font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-            font-size: clamp(1rem, 2vw, 1.25rem);
+            font-size: clamp(0.98rem, 1.8vw, 1.1rem);
             font-weight: 500;
             color: var(--text-sub);
             margin-bottom: 32px;
-            max-width: 650px;
+            max-width: 720px;
             line-height: 1.6;
         }
 
@@ -216,6 +227,30 @@
             filter: brightness(1.05);
         }
 
+        .back-nav-bar {
+            margin-bottom: 24px;
+        }
+
+        .btn-back-arrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f0f0f0;
+            color: var(--text-dark);
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 800;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-back-arrow:hover {
+            background: var(--gold-flat);
+            color: var(--c-white);
+        }
+
         .homepage-block {
             padding: 60px 0;
             border-bottom: 1px solid var(--border);
@@ -231,54 +266,49 @@
             margin-top: 8px;
         }
 
-        .guide-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        /* Tools Grid */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
         }
 
-        .guide-card-gold {
-            background: var(--bg-card);
-            border: 1px solid var(--gold-flat);
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .guide-num {
-            font-size: 0.85rem;
-            font-weight: 900;
-            color: var(--gold-flat);
-            letter-spacing: 1.5px;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .guide-card-gold p {
-            font-size: 1rem;
-            color: var(--text-sub);
-            line-height: 1.7;
-        }
-
-        .archive-navigator-card {
+        .tool-card-gold {
             background: var(--bg-card);
             border: 1.5px solid var(--gold-flat);
             border-radius: 16px;
-            padding: 40px 30px;
-            text-align: center;
+            padding: 36px 28px;
             box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-        .archive-navigator-card h3 {
+        .tool-card-gold h3 {
             font-size: 1.8rem;
             color: var(--text-dark);
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
-        .archive-navigator-card p {
+        .tool-card-gold p {
             font-size: 1rem;
             color: var(--text-sub);
             margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .tool-card-disabled {
+            background: #f7f7f7;
+            border: 1px dashed var(--border);
+            border-radius: 16px;
+            padding: 36px 28px;
+            opacity: 0.75;
+        }
+
+        .tool-card-disabled h3 {
+            font-size: 1.6rem;
+            color: #777;
+            margin-bottom: 12px;
         }
 
         .about-box {
@@ -320,7 +350,7 @@
 
         .disclaimer-box p { margin-bottom: 4px; }
 
-        /* PAGE 2 DASHBOARD */
+        /* DASHBOARD METRICS */
 
         .giant-bias-banner {
             background: var(--bg-card);
@@ -532,7 +562,7 @@
                 padding: 16px 24px;
                 min-height: 48px;
             }
-            .guide-card-gold, .oi-card-gold, .flow-card-gold, .about-box, .archive-navigator-card {
+            .oi-card-gold, .flow-card-gold, .about-box, .tool-card-gold {
                 padding: 20px;
             }
             .giant-bias-banner { padding: 20px 16px; }
@@ -570,8 +600,7 @@
             <a class="brand-logo" href="javascript:void(0)" onclick="showPage('home')" role="button">amitraaj<span>.in</span></a>
             <div class="nav-links">
                 <button type="button" class="nav-link active" onclick="showPage('home')">Home</button>
-                <button type="button" class="nav-link" onclick="showPage('latest')">Daily Footprints</button>
-                <button type="button" class="nav-link" onclick="showPage('archive')">Graph</button>
+                <button type="button" class="nav-link" onclick="showPage('tools')">Our Tools</button>
                 <button type="button" class="nav-link" onclick="showPage('about')">About</button>
             </div>
         </nav>
@@ -579,58 +608,52 @@
 
     <div class="container">
 
-        <!-- ================= PAGE 1: SCROLLABLE HOMEPAGE ================= -->
+        <!-- ================= PAGE 1: HOMEPAGE ================= -->
         <div id="page-home" class="page-view active">
             
+            <!-- HERO SECTION -->
             <section class="hero-section">
                 <div class="hero-container">
-                    <h1 class="hero-headline">The Footprints of Big Money</h1>
+                    <h1 class="hero-headline">For Traders, By Traders</h1>
                     
-                    <p class="hero-subtitle-small">
-                        In every market cycle, while retail guesswork fails, Big Money leaves unmistakable footprints.
+                    <p class="hero-mission-bold">
+                        EMPOWERING RETAIL TRADERS WITH INSTITUTIONAL CLARITY
                     </p>
-                    
-                    <button type="button" class="btn-cta" onclick="showPage('latest')">See Latest Footprints ›</button>
+
+                    <p class="hero-subtitle-small">
+                        Amitraaj.in builds high-precision, no-nonsense analytical tools designed specifically to help retail traders track market money flow and navigate complex participant positioning.
+                    </p>
+
+                    <button type="button" class="btn-cta" onclick="showPage('tools')">Tools List ›</button>
                 </div>
             </section>
 
+            <!-- OUR TOOLS SECTION (SECOND ELEMENT) -->
             <section class="homepage-block">
                 <div class="block-header">
-                    <div class="section-tag">USER GUIDE & CONCEPTS</div>
-                    <h2 class="serif-title block-title">Understanding Market Participants</h2>
+                    <div class="section-tag">ANALYTICS SUITE</div>
+                    <h2 class="serif-title block-title">Our Tools</h2>
                 </div>
 
-                <div class="guide-stack">
-                    <div class="guide-card-gold">
-                        <span class="guide-num">01 / FOREIGN INSTITUTIONAL INVESTORS</span>
-                        <p>FIIs represent foreign hedge funds, sovereign wealth capital, and global asset managers. They hold massive capital reserves and are the primary trend drivers in the Indian equity and derivative markets.</p>
+                <div class="tools-grid">
+                    <div class="tool-card-gold">
+                        <div>
+                            <span class="section-tag" style="margin-bottom: 12px;">ACTIVE TOOL</span>
+                            <h3>Daily Market Footprints</h3>
+                            <p>Tracks real-time money flow and net derivative positions across market participants to help you spot big-money accumulation and distribution.</p>
+                        </div>
+                        <button type="button" class="btn-cta" onclick="showPage('latest')">Launch Tool ›</button>
                     </div>
 
-                    <div class="guide-card-gold">
-                        <span class="guide-num">02 / DOMESTIC INSTITUTIONAL INVESTORS</span>
-                        <p>DIIs comprise Indian mutual funds, insurance companies (like LIC), and domestic pension funds. They serve as long-term market anchors and provide strong structural liquidity support.</p>
-                    </div>
-
-                    <div class="guide-card-gold">
-                        <span class="guide-num">03 / RETAIL & PRO CLIENTS</span>
-                        <p>Retail traders encompass individual non-institutional traders. Historically, retail participants are heavily net-long on call options during market tops and net-short during market bottoms.</p>
+                    <div class="tool-card-disabled">
+                        <span class="section-tag" style="margin-bottom: 12px; background: #e0e0e0;">IN DEVELOPMENT</span>
+                        <h3>More Tools Coming Soon</h3>
+                        <p>We are actively developing future analytical modules, trend filters, and volatility tracking tools for retail traders.</p>
                     </div>
                 </div>
             </section>
 
-            <section class="homepage-block">
-                <div class="block-header">
-                    <div class="section-tag">TREND VISUALS</div>
-                    <h2 class="serif-title block-title">CASH MARKET TREND</h2>
-                </div>
-
-                <div class="archive-navigator-card">
-                    <h3>Track the Flow of Big Money Over Time</h3>
-                    <p>Instead of scrolling through past daily snapshots, this section will chart how FII money moves in and out of the market over time — a single visual trendline that makes it easy to spot sustained buying or selling, momentum shifts, and turning points at a glance.</p>
-                    <button type="button" class="btn-cta" onclick="showPage('archive')">View Graph ›</button>
-                </div>
-            </section>
-
+            <!-- ABOUT SECTION -->
             <section class="homepage-block" style="border-bottom: none;">
                 <div class="block-header">
                     <div class="section-tag">ABOUT AMITRAAJ.IN</div>
@@ -639,11 +662,12 @@
 
                 <div class="about-box">
                     <p>
-                        <strong>amitraaj.in</strong> is an independent initiative designed to bring institutional-grade End-Of-Day (EOD) derivatives data directly to retail market participants without clutter or cost. Instead of wading through raw exchange text files and chaotic tables, our platform converts complex NSE raw data into clean, vertically-stacked visual cards and clear net positional indicators. We do not sell tips, advisory packages, or promises of guaranteed returns—we provide clean, open, and accessible market footprint visuals 100% free forever.
+                        <strong>Amitraaj.in</strong> is an independent initiative designed to bring high-clarity data tools directly to retail traders. We focus on long-term value creation for the retail trading community—simplifying complex NSE End-Of-Day market numbers into intuitive, vertical visual representations. We do not sell advisory calls or trading tips; our goal is strictly to equip independent retail traders with better analytical perspective.
                     </p>
                 </div>
             </section>
 
+            <!-- DISCLAIMER SECTION -->
             <section class="homepage-block" style="border-bottom: none;">
                 <div class="block-header">
                     <div class="section-tag">RISK & LEGAL DISCLAIMER</div>
@@ -652,27 +676,62 @@
 
                 <div class="disclaimer-box">
                     <h4>No Investment Advice</h4>
-                    <p>The content on amitraaj.in is provided strictly for educational and informational purposes. Nothing on this website constitutes investment advice, a recommendation, or a solicitation to buy or sell any security, derivative, or financial instrument. We are not a SEBI-registered Investment Adviser or Research Analyst.</p>
+                    <p>The content on Amitraaj.in is provided strictly for educational and informational purposes. Nothing on this website constitutes investment advice, a recommendation, or a solicitation to buy or sell any security, derivative, or financial instrument. We are not a SEBI-registered Investment Adviser or Research Analyst.</p>
 
                     <h4>Data Accuracy & Delays</h4>
                     <p>FII, DII, and participant-wise Open Interest data displayed here is sourced from publicly available NSE end-of-day disclosures and may be subject to processing delays, transcription errors, or revisions by the exchange. We do not guarantee the accuracy, completeness, or timeliness of any figure shown.</p>
 
-                    <h4>No Guarantee of Results</h4>
-                    <p>Past institutional positioning or historical market bias shown in the Graph does not guarantee or predict future price movement. Markets are influenced by numerous factors beyond FII/DII flows.</p>
-
-                    <h4>Risk of Trading & Investing</h4>
-                    <p>Trading and investing in equities, derivatives, and futures & options carries a high degree of risk and may not be suitable for all participants. You could lose part or all of your capital. Please assess your own risk appetite before making any financial decision.</p>
-
                     <h4>Consult a Professional</h4>
-                    <p>Please consult a SEBI-registered financial advisor, broker, or tax professional before making any investment decision. amitraaj.in and its creators accept no liability for losses arising from the use of this website or reliance on the data presented.</p>
+                    <p>Trading and investing in equities and derivatives carries high financial risk. Please consult a SEBI-registered financial advisor before making any trading decision.</p>
                 </div>
             </section>
 
         </div>
 
-        <!-- ================= PAGE 2: MASSIVE VERTICAL DASHBOARD ================= -->
+        <!-- ================= PAGE 2: OUR TOOLS PAGE ================= -->
+        <div id="page-tools" class="page-view">
+            
+            <div class="back-nav-bar">
+                <button type="button" class="btn-back-arrow" onclick="showPage('home')">
+                    ← Back to Home
+                </button>
+            </div>
+
+            <div style="margin-bottom: 32px;">
+                <div class="section-tag">SUITE OF ANALYTICS</div>
+                <h1 class="serif-title" style="font-size: clamp(2.5rem, 4.5vw, 4rem);">Our Tools</h1>
+                <p style="color: var(--text-sub); font-size: 1.05rem; margin-top: 8px;">
+                    Explore our suite of purpose-built tools crafted to give retail traders systematic insight into institutional market dynamics.
+                </p>
+            </div>
+
+            <div class="tools-grid">
+                <div class="tool-card-gold">
+                    <div>
+                        <span class="section-tag" style="margin-bottom: 12px;">AVAILABLE NOW</span>
+                        <h3>Daily Market Footprints</h3>
+                        <p>Analyze FII/DII cash flow alongside participant-wise Open Interest (Futures, Calls, Puts) to read genuine institutional bias every day.</p>
+                    </div>
+                    <button type="button" class="btn-cta" onclick="showPage('latest')">Launch Tool ›</button>
+                </div>
+
+                <div class="tool-card-disabled">
+                    <span class="section-tag" style="margin-bottom: 12px; background: #e0e0e0;">IN DEVELOPMENT</span>
+                    <h3>More Tools Coming Soon</h3>
+                    <p>We are actively building advanced analytics models including multi-day flow indicators, sector momentum scanners, and volatility alerts for retail traders.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PAGE 3: DAILY FOOTPRINTS DASHBOARD ================= -->
         <div id="page-latest" class="page-view">
             
+            <div class="back-nav-bar">
+                <button type="button" class="btn-back-arrow" onclick="showPage('tools')">
+                    ← Back to Tools List
+                </button>
+            </div>
+
             <div style="margin-bottom: 28px;">
                 <div class="section-tag">DAILY DASHBOARD</div>
             </div>
@@ -704,10 +763,12 @@
                 </div>
             </div>
 
-            <div>
-                <div style="margin-bottom: 20px;">
-                    <button type="button" class="btn-cta" onclick="showPage('archive')" style="padding: 12px 24px; font-size: 0.95rem;">Cash Market Trend ›</button>
-                </div>
+            <div style="margin-bottom: 40px;">
+                <!-- CASH MARKET TREND BUTTON -->
+                <button type="button" class="btn-cta" onclick="showPage('archive')" style="padding: 12px 24px; font-size: 0.95rem; margin-bottom: 30px;">
+                    📊 Cash Market Trend ›
+                </button>
+
                 <h2 class="serif-title" style="font-size: 2.2rem; margin-bottom: 20px;">DERIVATIVES DATA</h2>
                 <div class="vertical-oi-stack">
                     
@@ -809,8 +870,15 @@
 
         </div>
 
-        <!-- ================= PAGE 3: GRAPH PAGE ================= -->
+        <!-- ================= PAGE 4: GRAPH PAGE ================= -->
         <div id="page-archive" class="page-view">
+            
+            <div class="back-nav-bar">
+                <button type="button" class="btn-back-arrow" onclick="showPage('latest')">
+                    ← Back to Daily Footprints
+                </button>
+            </div>
+
             <div style="margin-bottom: 24px;">
                 <div class="section-tag">TREND VISUALS</div>
                 <h1 class="serif-title" style="font-size: clamp(2.5rem, 4.5vw, 4rem);">CASH MARKET TREND</h1>
@@ -831,7 +899,7 @@
             </div>
         </div>
 
-        <!-- ================= PAGE 4: ABOUT PAGE ================= -->
+        <!-- ================= PAGE 5: ABOUT PAGE ================= -->
         <div id="page-about" class="page-view">
             <div style="margin-bottom: 24px;">
                 <div class="section-tag">ABOUT AMITRAAJ.IN</div>
@@ -840,7 +908,7 @@
 
             <div class="about-box">
                 <p>
-                    <strong>amitraaj.in</strong> is an independent initiative designed to bring institutional-grade End-Of-Day (EOD) derivatives data directly to retail market participants without clutter or cost. Instead of wading through raw exchange text files and chaotic tables, our platform converts complex NSE raw data into clean, vertically-stacked visual cards and clear net positional indicators. We do not sell tips, advisory packages, or promises of guaranteed returns—we provide clean, open, and accessible market footprint visuals 100% free forever.
+                    <strong>Amitraaj.in</strong> is built with a singular long-term objective: empowering retail traders with tools designed <strong>For Traders, By Traders</strong>. We are committed to building accessible, high-precision market visuals that level the playing field for independent traders—converting chaotic market positioning into simple, clear analytics.
                 </p>
             </div>
         </div>
@@ -849,8 +917,8 @@
 
     <!-- Footer -->
     <footer>
-        <div>© 2026 The Footprints of Big Money • amitraaj.in</div>
-        <div>NSE EOD Visualizer • Built Open & Free for All Traders</div>
+        <div>© 2026 amitraaj.in • For Traders By Traders</div>
+        <div>Built Open & Free for All Retail Traders</div>
     </footer>
 
     <script>
@@ -873,7 +941,7 @@
                 initFlowCharts(globalData.cashGraph);
             }
 
-            var navIndex = ['home', 'latest', 'archive', 'about'].indexOf(pageId);
+            var navIndex = ['home', 'tools', 'about'].indexOf(pageId);
             if (navIndex !== -1) {
                 document.querySelectorAll('.nav-link')[navIndex].classList.add('active');
             }
