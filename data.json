@@ -7,8 +7,8 @@
   },
   "derivatives": {
     "fii": {
-      "futures": "+15K",
-      "calls": "-20K",
+      "futures": "+500K",
+      "calls": "-30K",
       "puts": "+5K"
     },
     "dii": {
