@@ -728,6 +728,7 @@
                 <h2 class="serif-title" style="font-size: 2.2rem; margin-bottom: 20px;">DERIVATIVES DATA</h2>
                 <div class="vertical-oi-stack">
                     
+                    <!-- 1. FII POSITIONS -->
                     <div class="oi-card-gold">
                         <div class="oi-header-giant">
                             <h3>FII Positions</h3>
@@ -758,36 +759,7 @@
                         </div>
                     </div>
 
-                    <div class="oi-card-gold">
-                        <div class="oi-header-giant">
-                            <h3>DII Positions</h3>
-                            <span class="section-tag" style="margin-bottom:0;">DOMESTIC INST.</span>
-                        </div>
-                        <div class="oi-vertical-chart-container">
-                            <div class="vert-bar-group">
-                                <span class="vert-bar-val" id="dii-fut">--</span>
-                                <div class="vert-bar-track">
-                                    <div class="vert-bar-fill" id="bar-dii-fut"></div>
-                                </div>
-                                <span class="vert-bar-label">Futures</span>
-                            </div>
-                            <div class="vert-bar-group">
-                                <span class="vert-bar-val" id="dii-call">--</span>
-                                <div class="vert-bar-track">
-                                    <div class="vert-bar-fill" id="bar-dii-call"></div>
-                                </div>
-                                <span class="vert-bar-label">Calls</span>
-                            </div>
-                            <div class="vert-bar-group">
-                                <span class="vert-bar-val" id="dii-put">--</span>
-                                <div class="vert-bar-track">
-                                    <div class="vert-bar-fill" id="bar-dii-put"></div>
-                                </div>
-                                <span class="vert-bar-label">Puts</span>
-                            </div>
-                        </div>
-                    </div>
-
+                    <!-- 2. RETAIL POSITIONS (MOVED ABOVE DII) -->
                     <div class="oi-card-gold">
                         <div class="oi-header-giant">
                             <h3>Retail Positions</h3>
@@ -812,6 +784,37 @@
                                 <span class="vert-bar-val" id="ret-put">--</span>
                                 <div class="vert-bar-track">
                                     <div class="vert-bar-fill" id="bar-ret-put"></div>
+                                </div>
+                                <span class="vert-bar-label">Puts</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. DII POSITIONS (STANDALONE SCALING) -->
+                    <div class="oi-card-gold">
+                        <div class="oi-header-giant">
+                            <h3>DII Positions</h3>
+                            <span class="section-tag" style="margin-bottom:0;">DOMESTIC INST.</span>
+                        </div>
+                        <div class="oi-vertical-chart-container">
+                            <div class="vert-bar-group">
+                                <span class="vert-bar-val" id="dii-fut">--</span>
+                                <div class="vert-bar-track">
+                                    <div class="vert-bar-fill" id="bar-dii-fut"></div>
+                                </div>
+                                <span class="vert-bar-label">Futures</span>
+                            </div>
+                            <div class="vert-bar-group">
+                                <span class="vert-bar-val" id="dii-call">--</span>
+                                <div class="vert-bar-track">
+                                    <div class="vert-bar-fill" id="bar-dii-call"></div>
+                                </div>
+                                <span class="vert-bar-label">Calls</span>
+                            </div>
+                            <div class="vert-bar-group">
+                                <span class="vert-bar-val" id="dii-put">--</span>
+                                <div class="vert-bar-track">
+                                    <div class="vert-bar-fill" id="bar-dii-put"></div>
                                 </div>
                                 <span class="vert-bar-label">Puts</span>
                             </div>
@@ -923,7 +926,7 @@
             // Extract integer value from strings like "+234K" or "-85K"
             const num = Math.abs(parseInt(rawValue.replace(/[^0-9-]/g, '')) || 0);
             
-            // Calculate height percentage relative to highest value in current dataset
+            // Calculate height percentage relative to highest value in comparison pair
             let percent = maxThreshold > 0 ? Math.min(Math.round((num / maxThreshold) * 100), 100) : 10;
             if (percent < 10) percent = 10; // Maintain minimum visible height
 
@@ -937,16 +940,6 @@
                 valEl.className = 'vert-bar-val val-bull';
                 barEl.className = 'vert-bar-fill bar-fill-green';
             }
-        }
-
-        // Returns peak value specifically across all 3 participants for Futures
-        function getMaxForCategory(deriv, category) {
-            let max = 1;
-            ['fii', 'dii', 'retail'].forEach(group => {
-                const val = Math.abs(parseInt(deriv[group][category].replace(/[^0-9-]/g, '')) || 0);
-                if (val > max) max = val;
-            });
-            return max;
         }
 
         async function fetchDailyData() {
@@ -963,38 +956,33 @@
                 formatVal('cash-retail', globalData.cash.retail);
 
                 const deriv = globalData.derivatives;
+                const parseVal = (str) => Math.abs(parseInt(str.replace(/[^0-9-]/g, '')) || 0);
 
-                // 1. FUTURES: Compared WITH EACH OTHER (FII vs DII vs Retail)
-                const maxFutures = getMaxForCategory(deriv, 'futures');
-                updateBar('fii-fut', 'bar-fii-fut', deriv.fii.futures, maxFutures);
-                updateBar('dii-fut', 'bar-dii-fut', deriv.dii.futures, maxFutures);
-                updateBar('ret-fut', 'bar-ret-fut', deriv.retail.futures, maxFutures);
+                // --- 1. DIRECT COMPARISON: FII vs RETAIL (Futures vs Futures, Calls vs Calls, Puts vs Puts) ---
+                const maxFut = Math.max(parseVal(deriv.fii.futures), parseVal(deriv.retail.futures)) || 1;
+                const maxCall = Math.max(parseVal(deriv.fii.calls), parseVal(deriv.retail.calls)) || 1;
+                const maxPut = Math.max(parseVal(deriv.fii.puts), parseVal(deriv.retail.puts)) || 1;
 
-                // 2. OPTIONS: CALL vs PUT compared WITHIN EACH SEGMENT
-                
-                // FII Segment (Calls vs Puts)
-                const fiiOptMax = Math.max(
-                    Math.abs(parseInt(deriv.fii.calls.replace(/[^0-9-]/g, '')) || 0),
-                    Math.abs(parseInt(deriv.fii.puts.replace(/[^0-9-]/g, '')) || 0)
+                // FII Bars
+                updateBar('fii-fut', 'bar-fii-fut', deriv.fii.futures, maxFut);
+                updateBar('fii-call', 'bar-fii-call', deriv.fii.calls, maxCall);
+                updateBar('fii-put', 'bar-fii-put', deriv.fii.puts, maxPut);
+
+                // Retail Bars (Scaled side-by-side against FII)
+                updateBar('ret-fut', 'bar-ret-fut', deriv.retail.futures, maxFut);
+                updateBar('ret-call', 'bar-ret-call', deriv.retail.calls, maxCall);
+                updateBar('ret-put', 'bar-ret-put', deriv.retail.puts, maxPut);
+
+                // --- 2. DII POSITIONS (SCALED INDEPENDENTLY ON ITS OWN MAX) ---
+                const diiMax = Math.max(
+                    parseVal(deriv.dii.futures),
+                    parseVal(deriv.dii.calls),
+                    parseVal(deriv.dii.puts)
                 ) || 1;
-                updateBar('fii-call', 'bar-fii-call', deriv.fii.calls, fiiOptMax);
-                updateBar('fii-put', 'bar-fii-put', deriv.fii.puts, fiiOptMax);
 
-                // DII Segment (Calls vs Puts)
-                const diiOptMax = Math.max(
-                    Math.abs(parseInt(deriv.dii.calls.replace(/[^0-9-]/g, '')) || 0),
-                    Math.abs(parseInt(deriv.dii.puts.replace(/[^0-9-]/g, '')) || 0)
-                ) || 1;
-                updateBar('dii-call', 'bar-dii-call', deriv.dii.calls, diiOptMax);
-                updateBar('dii-put', 'bar-dii-put', deriv.dii.puts, diiOptMax);
-
-                // Retail Segment (Calls vs Puts)
-                const retOptMax = Math.max(
-                    Math.abs(parseInt(deriv.retail.calls.replace(/[^0-9-]/g, '')) || 0),
-                    Math.abs(parseInt(deriv.retail.puts.replace(/[^0-9-]/g, '')) || 0)
-                ) || 1;
-                updateBar('ret-call', 'bar-ret-call', deriv.retail.calls, retOptMax);
-                updateBar('ret-put', 'bar-ret-put', deriv.retail.puts, retOptMax);
+                updateBar('dii-fut', 'bar-dii-fut', deriv.dii.futures, diiMax);
+                updateBar('dii-call', 'bar-dii-call', deriv.dii.calls, diiMax);
+                updateBar('dii-put', 'bar-dii-put', deriv.dii.puts, diiMax);
 
             } catch (err) {
                 console.error("Error fetching data.json:", err);
