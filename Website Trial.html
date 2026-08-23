@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>The Footprints of Big Money</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Base Palette */
+            --c-white: #ffffff;
+            --c-green: #1d4d22; /* Muted Green */
+            --c-red: #d32f2f;   /* Red */
+            
+            /* Metallic Gradients & Flats */
+            --gold-gradient: linear-gradient(135deg, #c4a143 0%, #edd382 45%, #e2c266 55%, #b58d2a 100%);
+            --silver-gradient: linear-gradient(135deg, #d8d8d8 0%, #ffffff 45%, #e8e8e8 55%, #c8c8c8 100%);
+            --gold-flat: #b08d33;
+            --silver-flat: #c0c0c0;
+
+            /* Visual Elements */
+            --bg-light: #fafafa;
+            --bg-card: #ffffff;
+            --border: rgba(210, 210, 210, 0.5);
+            
+            --text-dark: #1a1a1a;
+            --text-sub: #4a4a4a;
+            
+            /* Enhanced Shadows */
+            --shadow-sm: 0 4px 15px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 10px 24px rgba(176, 141, 51, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            /* iOS Specific Fixes */
+            -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+            touch-action: manipulation;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* Header Navigation */
+        header {
+            border-bottom: 1px solid var(--border);
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(16px);
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .brand-logo {
+            font-size: 1.6rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            color: var(--text-dark);
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .brand-logo span { 
+            color: var(--gold-flat);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            list-style: none;
+            background: #f0f0f0;
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .nav-link {
+            color: var(--text-dark);
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            background: transparent;
+            text-decoration: none;
+            white-space: nowrap;
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .nav-link:hover, .nav-link:active { color: var(--c-green); }
+        .nav-link.active {
+            background: var(--gold-gradient);
+            color: #1a1a1a;
+            box-shadow: 0 3px 8px rgba(176, 141, 51, 0.25);
+        }
+
+        /* Container Layout */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 40px 5%;
+        }
+
+        .page-view { display: none; }
+        .page-view.active { display: block; }
+
+        /* Typography & Headings */
+        .serif-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            color: var(--text-dark);
+            line-height: 1.15;
+        }
+
+        .section-tag {
+            background: #f4f4f4;
+            border: 1px solid var(--gold-flat);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            color: var(--text-dark);
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            padding: 20px 0 60px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .hero-container {
+            max-width: 900px;
+        }
+
+        .hero-headline {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 6.5vw, 5.2rem);
+            font-weight: 800;
+            line-height: 1.08;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+            letter-spacing: -0.8px;
+        }
+
+        .hero-subtitle-small {
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            font-weight: 500;
+            color: var(--text-sub);
+            margin-bottom: 32px;
+            max-width: 650px;
+            line-height: 1.6;
+        }
+
+        .btn-cta {
+            background: var(--gold-gradient);
+            color: #1a1a1a;
+            padding: 18px 36px;
+            border-radius: 8px;
+            font-size: 1.05rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(176, 141, 51, 0.28);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: transform 0.2s, filter 0.2s;
+            text-align: center;
+            width: auto;
+            min-height: 48px;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .btn-cta:hover, .btn-cta:active { 
+            transform: translateY(-2px); 
+            filter: brightness(1.05);
+        }
+
+        .homepage-block {
+            padding: 60px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .block-header {
+            max-width: 800px;
+            margin-bottom: 36px;
+        }
+
+        .block-title {
+            font-size: clamp(2rem, 3.5vw, 3rem);
+            margin-top: 8px;
+        }
+
+        .guide-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .guide-card-gold {
+            background: var(--bg-card);
+            border: 1px solid var(--gold-flat);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .guide-num {
+            font-size: 0.85rem;
+            font-weight: 900;
+            color: var(--gold-flat);
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .guide-card-gold p {
+            font-size: 1rem;
+            color: var(--text-sub);
+            line-height: 1.7;
+        }
+
+        .archive-navigator-card {
+            background: var(--bg-card);
+            border: 1.5px solid var(--gold-flat);
+            border-radius: 16px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .archive-navigator-card h3 {
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .archive-navigator-card p {
+            font-size: 1rem;
+            color: var(--text-sub);
+            margin-bottom: 24px;
+        }
+
+        .about-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 36px;
+            line-height: 1.8;
+            font-size: 1.05rem;
+            color: var(--text-sub);
+            box-shadow: var(--shadow-sm);
+            border-top: 3.5px solid var(--gold-flat);
+        }
+
+        .about-box strong { color: var(--text-dark); }
+
+        .disclaimer-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 36px;
+            line-height: 1.8;
+            font-size: 0.92rem;
+            color: var(--text-sub);
+            box-shadow: var(--shadow-sm);
+            border-top: 3.5px solid var(--c-red);
+        }
+
+        .disclaimer-box h4 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            margin-top: 18px;
+        }
+
+        .disclaimer-box h4:first-child { margin-top: 0; }
+
+        .disclaimer-box p { margin-bottom: 4px; }
+
+        /* PAGE 2 DASHBOARD */
+
+        .giant-bias-banner {
+            background: var(--bg-card);
+            border: 2px solid var(--gold-flat);
+            border-radius: 20px;
+            padding: 24px 20px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .vertical-flow-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+
+        .flow-card-gold {
+            background: var(--bg-card);
+            border: 1px solid var(--gold-flat);
+            border-radius: 16px;
+            padding: 24px 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .flow-card-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            gap: 16px;
+            flex-wrap: nowrap;
+        }
+
+        .flow-card-title {
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+            font-weight: 900 !important;
+            letter-spacing: 1px;
+            line-height: 1;
+        }
+
+        .title-gold { color: #9a721d; }
+        .title-silver { color: #5a5a5a; }
+        .title-bronze { color: #8c4a1b; }
+
+        @media (min-width: 768px) {
+            .title-gold {
+                background: linear-gradient(135deg, #8a6416 0%, #c49d3b 50%, #73510e 100%);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                color: transparent;
+            }
+
+            .title-silver {
+                background: linear-gradient(135deg, #4a4a4a 0%, #8c8c8c 50%, #3a3a3a 100%);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                color: transparent;
+            }
+
+            .title-bronze {
+                background: linear-gradient(135deg, #783d13 0%, #b36734 50%, #592a08 100%);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                color: transparent;
+            }
+        }
+
+        .flow-card-value {
+            font-size: clamp(2rem, 4.5vw, 3.2rem);
+            font-weight: 900 !important;
+            line-height: 1;
+            white-space: nowrap;
+        }
+
+        .val-bull { color: var(--c-green) !important; }
+        .val-bear { color: var(--c-red) !important; }
+
+        .flow-card-desc {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            margin-top: 10px;
+        }
+
+        .vertical-oi-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .oi-card-gold {
+            background: var(--bg-card);
+            border: 1px solid var(--gold-flat);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .oi-header-giant {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 16px;
+        }
+
+        .oi-header-giant h3 {
+            font-size: 1.8rem;
+            color: var(--text-dark);
+        }
+
+        .oi-vertical-chart-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            height: 260px;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+            width: 100%;
+        }
+
+        .vert-bar-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100%;
+            flex: 1;
+            min-width: 0;
+            padding: 0 4px;
+        }
+
+        .vert-bar-val {
+            font-size: 1.05rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .vert-bar-track {
+            width: 100%;
+            max-width: 80px;
+            background: #eef0f2;
+            height: 200px;
+            border-radius: 10px;
+            display: flex;
+            align-items: flex-end;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .vert-bar-fill {
+            width: 100%;
+            border-radius: 8px 8px 0 0;
+            transition: height 0.6s ease;
+        }
+
+        .vert-bar-fill.bar-fill-green { background: var(--c-green); }
+        .vert-bar-fill.bar-fill-red { background: var(--c-red); }
+
+        .vert-bar-label {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-top: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        footer {
+            max-width: 1300px;
+            margin: 60px auto 0 auto;
+            padding: 30px 5%;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-sub);
+            font-size: 0.85rem;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        @media (max-width: 640px) {
+            nav {
+                flex-direction: column;
+                gap: 16px;
+                padding: 16px;
+            }
+            .nav-links {
+                width: 100%;
+                justify-content: space-between;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .nav-links::-webkit-scrollbar { display: none; }
+            .nav-link {
+                padding: 10px 12px;
+                font-size: 0.82rem;
+                min-height: 44px;
+                flex-shrink: 0;
+            }
+            .container { padding: 24px 4%; }
+            .hero-section { padding-bottom: 40px; }
+            .btn-cta {
+                width: 100%;
+                padding: 16px 24px;
+                min-height: 48px;
+            }
+            .guide-card-gold, .oi-card-gold, .flow-card-gold, .about-box, .archive-navigator-card {
+                padding: 20px;
+            }
+            .giant-bias-banner { padding: 20px 16px; }
+
+            .oi-vertical-chart-container {
+                gap: 6px;
+                height: 220px;
+            }
+            .vert-bar-track {
+                max-width: 100%;
+                height: 170px;
+            }
+            .vert-bar-val { font-size: 0.85rem; }
+            .vert-bar-label { font-size: 0.78rem; }
+            .oi-header-giant h3 { font-size: 1.4rem; }
+
+            .flow-card-row {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            footer {
+                flex-direction: column;
+                text-align: center;
+                padding: 24px 5%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <nav>
+            <a class="brand-logo" href="javascript:void(0)" onclick="showPage('home')" role="button">amitraaj<span>.in</span></a>
+            <div class="nav-links">
+                <button type="button" class="nav-link active" onclick="showPage('home')">Home</button>
+                <button type="button" class="nav-link" onclick="showPage('latest')">Daily Footprints</button>
+                <button type="button" class="nav-link" onclick="showPage('archive')">Graph</button>
+                <button type="button" class="nav-link" onclick="showPage('about')">About</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+
+        <!-- ================= PAGE 1: SCROLLABLE HOMEPAGE ================= -->
+        <div id="page-home" class="page-view active">
+            
+            <section class="hero-section">
+                <div class="hero-container">
+                    <h1 class="hero-headline">The Footprints of Big Money</h1>
+                    
+                    <p class="hero-subtitle-small">
+                        In every market cycle, while retail guesswork fails, Big Money leaves unmistakable footprints.
+                    </p>
+                    
+                    <button type="button" class="btn-cta" onclick="showPage('latest')">See Latest Footprints ›</button>
+                </div>
+            </section>
+
+            <section class="homepage-block">
+                <div class="block-header">
+                    <div class="section-tag">USER GUIDE & CONCEPTS</div>
+                    <h2 class="serif-title block-title">Understanding Market Participants</h2>
+                </div>
+
+                <div class="guide-stack">
+                    <div class="guide-card-gold">
+                        <span class="guide-num">01 / FOREIGN INSTITUTIONAL INVESTORS</span>
+                        <p>FIIs represent foreign hedge funds, sovereign wealth capital, and global asset managers. They hold massive capital reserves and are the primary trend drivers in the Indian equity and derivative markets.</p>
+                    </div>
+
+                    <div class="guide-card-gold">
+                        <span class="guide-num">02 / DOMESTIC INSTITUTIONAL INVESTORS</span>
+                        <p>DIIs comprise Indian mutual funds, insurance companies (like LIC), and domestic pension funds. They serve as long-term market anchors and provide strong structural liquidity support.</p>
+                    </div>
+
+                    <div class="guide-card-gold">
+                        <span class="guide-num">03 / RETAIL & PRO CLIENTS</span>
+                        <p>Retail traders encompass individual non-institutional traders. Historically, retail participants are heavily net-long on call options during market tops and net-short during market bottoms.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="homepage-block">
+                <div class="block-header">
+                    <div class="section-tag">TREND VISUALS</div>
+                    <h2 class="serif-title block-title">CASH MARKET TREND</h2>
+                </div>
+
+                <div class="archive-navigator-card">
+                    <h3>Track the Flow of Big Money Over Time</h3>
+                    <p>Instead of scrolling through past daily snapshots, this section will chart how FII money moves in and out of the market over time — a single visual trendline that makes it easy to spot sustained buying or selling, momentum shifts, and turning points at a glance.</p>
+                    <button type="button" class="btn-cta" onclick="showPage('archive')">View Graph ›</button>
+                </div>
+            </section>
+
+            <section class="homepage-block" style="border-bottom: none;">
+                <div class="block-header">
+                    <div class="section-tag">ABOUT AMITRAAJ.IN</div>
+                    <h2 class="serif-title block-title">About amitraaj.in</h2>
+                </div>
+
+                <div class="about-box">
+                    <p>
+                        <strong>amitraaj.in</strong> is an independent initiative designed to bring institutional-grade End-Of-Day (EOD) derivatives data directly to retail market participants without clutter or cost. Instead of wading through raw exchange text files and chaotic tables, our platform converts complex NSE raw data into clean, vertically-stacked visual cards and clear net positional indicators. We do not sell tips, advisory packages, or promises of guaranteed returns—we provide clean, open, and accessible market footprint visuals 100% free forever.
+                    </p>
+                </div>
+            </section>
+
+            <section class="homepage-block" style="border-bottom: none;">
+                <div class="block-header">
+                    <div class="section-tag">RISK & LEGAL DISCLAIMER</div>
+                    <h2 class="serif-title block-title">Important Disclosures</h2>
+                </div>
+
+                <div class="disclaimer-box">
+                    <h4>No Investment Advice</h4>
+                    <p>The content on amitraaj.in is provided strictly for educational and informational purposes. Nothing on this website constitutes investment advice, a recommendation, or a solicitation to buy or sell any security, derivative, or financial instrument. We are not a SEBI-registered Investment Adviser or Research Analyst.</p>
+
+                    <h4>Data Accuracy & Delays</h4>
+                    <p>FII, DII, and participant-wise Open Interest data displayed here is sourced from publicly available NSE end-of-day disclosures and may be subject to processing delays, transcription errors, or revisions by the exchange. We do not guarantee the accuracy, completeness, or timeliness of any figure shown.</p>
+
+                    <h4>No Guarantee of Results</h4>
+                    <p>Past institutional positioning or historical market bias shown in the Graph does not guarantee or predict future price movement. Markets are influenced by numerous factors beyond FII/DII flows.</p>
+
+                    <h4>Risk of Trading & Investing</h4>
+                    <p>Trading and investing in equities, derivatives, and futures & options carries a high degree of risk and may not be suitable for all participants. You could lose part or all of your capital. Please assess your own risk appetite before making any financial decision.</p>
+
+                    <h4>Consult a Professional</h4>
+                    <p>Please consult a SEBI-registered financial advisor, broker, or tax professional before making any investment decision. amitraaj.in and its creators accept no liability for losses arising from the use of this website or reliance on the data presented.</p>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- ================= PAGE 2: MASSIVE VERTICAL DASHBOARD ================= -->
+        <div id="page-latest" class="page-view">
+            
+            <div style="margin-bottom: 28px;">
+                <div class="section-tag">DAILY DASHBOARD</div>
+            </div>
+
+            <div class="giant-bias-banner">
+                <div id="data-date" style="font-size: 1.25rem; font-weight: 800; color: var(--gold-flat); letter-spacing: 2px; text-transform: uppercase;">LOADING...</div>
+            </div>
+
+            <div style="margin-bottom: 40px;">
+                <h2 class="serif-title" style="font-size: 2.2rem; margin-bottom: 20px;">CASH MARKET DATA</h2>
+                <div class="vertical-flow-stack">
+                    
+                    <div class="flow-card-gold">
+                        <div class="flow-card-row">
+                            <div class="flow-card-title title-gold">FII</div>
+                            <div class="flow-card-value" id="cash-fii">--</div>
+                        </div>
+                        <div class="flow-card-desc">Foreign Institutional Investors cash market activity.</div>
+                    </div>
+
+                    <div class="flow-card-gold">
+                        <div class="flow-card-row">
+                            <div class="flow-card-title title-silver">DII</div>
+                            <div class="flow-card-value" id="cash-dii">--</div>
+                        </div>
+                        <div class="flow-card-desc">Domestic Mutual Funds & Institutions equity exposure.</div>
+                    </div>
+
+                    <div class="flow-card-gold">
+                        <div class="flow-card-row">
+                            <div class="flow-card-title title-bronze">RETAIL</div>
+                            <div class="flow-card-value" id="cash-retail">--</div>
+                        </div>
+                        <div class="flow-card-desc">Client/Retail participants cash positioning.</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div>
+                <div style="margin-bottom: 20px;">
+                    <button type="button" class="btn-cta" onclick="showPage('archive')" style="padding: 12px 24px; font-size: 0.95rem;">Cash Market Trend ›</button>
+                </div>
+                <h2 class="serif-title" style="font-size: 2.2rem; margin-bottom: 20px;">DERIVATIVES DATA</h2>
+                <div class="vertical-oi-stack">
+                    
+                    <div class="oi-card-gold">
+                        <div class="oi-header-giant">
+                            <h3>FII Positions</h3>
+                            <span class="section-tag" style="margin-bottom:0;">INSTITUTIONAL</span>
+                        </div>
+                        <div class="oi-vertical-chart-container">
+                            <div class="vert-bar-group">
+                                <span class="vert-bar-val" id="fii-fut">--</span>
+                                <div class="vert-bar-track">
+                                    <div class="vert-bar-fill" id="bar-fii-fut"></div>
+                                </div>
+                                <span class="vert-bar-label">Futures</span>
+                            </div>
+                            <div class="vert-bar-group">
+                                <span class="vert-bar-val" id="fii-call">--</span>
+                                <div class="vert-bar-track">
+                                    <div class="vert-bar-fill" id="bar-fii-call"></div>
+                                </div>
+                                <span class="vert-bar-label">Calls</span>
+                            </div>
+                            <div class="vert-bar-group">
+                                <span class="vert-bar-val" id="fii-put">--</span>
+                                <div class="vert-bar-track">
+                                    <div class="vert-bar-fill" id="bar-fii-put"></div>
+                                </div>
+                                <span class="vert-bar-label">Puts</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="oi-card-gold">
+                        <div class="oi-header-giant">
+                            <h3>DII Positions</h3>
+                            <span class="section-tag" style="margin-bottom:0;">DOMESTIC INST.</span>
+                        </div>
+                        <div class="oi-vertical-chart-container">
+                            <div class="vert-bar-group">
+                                <span class="vert-bar-val" id="dii-fut">--</span>
+                                <div class="vert-bar-track">
+                                    <div class="vert-bar-fill" id="bar-dii-fut"></div>
+                                </div>
+                                <span class="vert-bar-label">Futures</span>
+                            </div>
+                            <div class="vert-bar-group">
+                                <span class="vert-bar-val" id="dii-call">--</span>
+                                <div class="vert-bar-track">
+                                    <div class="vert-bar-fill" id="bar-dii-call"></div>
+                                </div>
+                                <span class="vert-bar-label">Calls</span>
+                            </div>
+                            <div class="vert-bar-group">
+                                <span class="vert-bar-val" id="dii-put">--</span>
+                                <div class="vert-bar-track">
+                                    <div class="vert-bar-fill" id="bar-dii-put"></div>
+                                </div>
+                                <span class="vert-bar-label">Puts</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="oi-card-gold">
+                        <div class="oi-header-giant">
+                            <h3>Retail Positions</h3>
+                            <span class="section-tag" style="margin-bottom:0;">CLIENTS</span>
+                        </div>
+                        <div class="oi-vertical-chart-container">
+                            <div class="vert-bar-group">
+                                <span class="vert-bar-val" id="ret-fut">--</span>
+                                <div class="vert-bar-track">
+                                    <div class="vert-bar-fill" id="bar-ret-fut"></div>
+                                </div>
+                                <span class="vert-bar-label">Futures</span>
+                            </div>
+                            <div class="vert-bar-group">
+                                <span class="vert-bar-val" id="ret-call">--</span>
+                                <div class="vert-bar-track">
+                                    <div class="vert-bar-fill" id="bar-ret-call"></div>
+                                </div>
+                                <span class="vert-bar-label">Calls</span>
+                            </div>
+                            <div class="vert-bar-group">
+                                <span class="vert-bar-val" id="ret-put">--</span>
+                                <div class="vert-bar-track">
+                                    <div class="vert-bar-fill" id="bar-ret-put"></div>
+                                </div>
+                                <span class="vert-bar-label">Puts</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ================= PAGE 3: GRAPH PAGE ================= -->
+        <div id="page-archive" class="page-view">
+            <div style="margin-bottom: 24px;">
+                <div class="section-tag">TREND VISUALS</div>
+                <h1 class="serif-title" style="font-size: clamp(2.5rem, 4.5vw, 4rem);">CASH MARKET TREND</h1>
+            </div>
+
+            <div class="giant-bias-banner" style="text-align:left; padding: 30px 24px; margin-bottom: 24px;">
+                <h3 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 20px; text-align:center;">FII MONEY FLOW</h3>
+                <div style="position: relative; height: 380px; width: 100%;">
+                    <canvas id="fiiFlowChart"></canvas>
+                </div>
+            </div>
+
+            <div class="giant-bias-banner" style="text-align:left; padding: 30px 24px; margin-bottom: 24px;">
+                <h3 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 20px; text-align:center;">DII MONEY FLOW</h3>
+                <div style="position: relative; height: 380px; width: 100%;">
+                    <canvas id="diiFlowChart"></canvas>
+                </div>
+            </div>
+
+            <div class="giant-bias-banner" style="text-align:left; padding: 30px 24px;">
+                <h3 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 20px; text-align:center;">RETAIL MONEY FLOW</h3>
+                <div style="position: relative; height: 380px; width: 100%;">
+                    <canvas id="retailFlowChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PAGE 4: ABOUT PAGE ================= -->
+        <div id="page-about" class="page-view">
+            <div style="margin-bottom: 24px;">
+                <div class="section-tag">ABOUT AMITRAAJ.IN</div>
+                <h1 class="serif-title" style="font-size: clamp(2.5rem, 4.5vw, 4rem);">About amitraaj.in</h1>
+            </div>
+
+            <div class="about-box">
+                <p>
+                    <strong>amitraaj.in</strong> is an independent initiative designed to bring institutional-grade End-Of-Day (EOD) derivatives data directly to retail market participants without clutter or cost. Instead of wading through raw exchange text files and chaotic tables, our platform converts complex NSE raw data into clean, vertically-stacked visual cards and clear net positional indicators. We do not sell tips, advisory packages, or promises of guaranteed returns—we provide clean, open, and accessible market footprint visuals 100% free forever.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div>© 2026 The Footprints of Big Money • amitraaj.in</div>
+        <div>NSE EOD Visualizer • Built Open & Free for All Traders</div>
+    </footer>
+
+    <script>
+        let globalData = null;
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page-view').forEach(function(p) { 
+                p.classList.remove('active'); 
+            });
+            document.querySelectorAll('.nav-link').forEach(function(l) { 
+                l.classList.remove('active'); 
+            });
+
+            var targetPage = document.getElementById('page-' + pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+
+            if (pageId === 'archive' && globalData) {
+                initFlowCharts(globalData.cashGraph);
+            }
+
+            var navIndex = ['home', 'latest', 'archive', 'about'].indexOf(pageId);
+            if (navIndex !== -1) {
+                document.querySelectorAll('.nav-link')[navIndex].classList.add('active');
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function formatVal(elId, val) {
+            const el = document.getElementById(elId);
+            if (!el) return;
+            el.innerText = val;
+            if (val.startsWith('-')) {
+                el.className = 'flow-card-value val-bear';
+            } else {
+                el.className = 'flow-card-value val-bull';
+            }
+        }
+
+        function updateBar(valId, barId, rawValue, maxThreshold) {
+            const valEl = document.getElementById(valId);
+            const barEl = document.getElementById(barId);
+            if (!valEl || !barEl) return;
+
+            valEl.innerText = rawValue;
+
+            // Extract integer value from strings like "+234K" or "-85K"
+            const num = Math.abs(parseInt(rawValue.replace(/[^0-9-]/g, '')) || 0);
+            
+            // Calculate height percentage relative to highest value in current dataset
+            let percent = Math.min(Math.round((num / maxThreshold) * 100), 100);
+            if (percent < 10) percent = 10; // Maintain minimum visible height
+
+            barEl.style.height = percent + '%';
+
+            // Apply red or green styling based on sign
+            if (rawValue.startsWith('-')) {
+                valEl.className = 'vert-bar-val val-bear';
+                barEl.className = 'vert-bar-fill bar-fill-red';
+            } else {
+                valEl.className = 'vert-bar-val val-bull';
+                barEl.className = 'vert-bar-fill bar-fill-green';
+            }
+        }
+
+        function getMaxDerivativeValue(deriv) {
+            let max = 1;
+            ['fii', 'dii', 'retail'].forEach(group => {
+                ['futures', 'calls', 'puts'].forEach(type => {
+                    const val = Math.abs(parseInt(deriv[group][type].replace(/[^0-9-]/g, '')) || 0);
+                    if (val > max) max = val;
+                });
+            });
+            return max;
+        }
+
+        async function fetchDailyData() {
+            try {
+                const response = await fetch('data.json?v=' + new Date().getTime());
+                globalData = await response.json();
+
+                // Set Date
+                document.getElementById('data-date').innerText = globalData.date;
+
+                // Set Cash Data
+                formatVal('cash-fii', globalData.cash.fii);
+                formatVal('cash-dii', globalData.cash.dii);
+                formatVal('cash-retail', globalData.cash.retail);
+
+                // Dynamically compute global maximum value to scale derivative bars accurately
+                const maxVal = getMaxDerivativeValue(globalData.derivatives);
+
+                // Set Dynamic Derivative Bars
+                updateBar('fii-fut', 'bar-fii-fut', globalData.derivatives.fii.futures, maxVal);
+                updateBar('fii-call', 'bar-fii-call', globalData.derivatives.fii.calls, maxVal);
+                updateBar('fii-put', 'bar-fii-put', globalData.derivatives.fii.puts, maxVal);
+
+                updateBar('dii-fut', 'bar-dii-fut', globalData.derivatives.dii.futures, maxVal);
+                updateBar('dii-call', 'bar-dii-call', globalData.derivatives.dii.calls, maxVal);
+                updateBar('dii-put', 'bar-dii-put', globalData.derivatives.dii.puts, maxVal);
+
+                updateBar('ret-fut', 'bar-ret-fut', globalData.derivatives.retail.futures, maxVal);
+                updateBar('ret-call', 'bar-ret-call', globalData.derivatives.retail.calls, maxVal);
+                updateBar('ret-put', 'bar-ret-put', globalData.derivatives.retail.puts, maxVal);
+
+            } catch (err) {
+                console.error("Error fetching data.json:", err);
+            }
+        }
+
+        function renderFlowChart(canvasId, labels, values) {
+            var ctx = document.getElementById(canvasId);
+            if (!ctx || typeof Chart === 'undefined' || ctx.dataset.rendered === 'true') return;
+            ctx.dataset.rendered = 'true';
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Net Flow (₹ Cr)',
+                        data: values,
+                        backgroundColor: values.map(function(v) { return v >= 0 ? '#1d4d22' : '#d32f2f'; }),
+                        borderRadius: 6,
+                        borderSkipped: false,
+                        maxBarThickness: 46
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(item) { 
+                                    return (item.raw >= 0 ? '+₹' : '-₹') + Math.abs(item.raw) + ' Cr'; 
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#4a4a4a', font: { weight: 600 } }
+                        },
+                        y: {
+                            grid: { color: 'rgba(210,210,210,0.4)' },
+                            ticks: {
+                                color: '#4a4a4a',
+                                callback: function(v) { return '₹' + v + ' Cr'; }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initFlowCharts(graphData) {
+            if (!graphData) return;
+            renderFlowChart('fiiFlowChart', graphData.dates, graphData.fii);
+            renderFlowChart('diiFlowChart', graphData.dates, graphData.dii);
+            renderFlowChart('retailFlowChart', graphData.dates, graphData.retail);
+        }
+
+        window.addEventListener('DOMContentLoaded', fetchDailyData);
+    </script>
+</body>
+</html>
