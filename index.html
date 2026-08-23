@@ -369,7 +369,6 @@
 
         .title-gold { color: #9a721d; }
         .title-silver { color: #5a5a5a; }
-        .title-bronze { color: #8c4a1b; }
 
         @media (min-width: 768px) {
             .title-gold {
@@ -382,14 +381,6 @@
 
             .title-silver {
                 background: linear-gradient(135deg, #4a4a4a 0%, #8c8c8c 50%, #3a3a3a 100%);
-                -webkit-background-clip: text;
-                background-clip: text;
-                -webkit-text-fill-color: transparent;
-                color: transparent;
-            }
-
-            .title-bronze {
-                background: linear-gradient(135deg, #783d13 0%, #b36734 50%, #592a08 100%);
                 -webkit-background-clip: text;
                 background-clip: text;
                 -webkit-text-fill-color: transparent;
@@ -710,14 +701,6 @@
                         <div class="flow-card-desc">Domestic Mutual Funds & Institutions equity exposure.</div>
                     </div>
 
-                    <div class="flow-card-gold">
-                        <div class="flow-card-row">
-                            <div class="flow-card-title title-bronze">RETAIL</div>
-                            <div class="flow-card-value" id="cash-retail">--</div>
-                        </div>
-                        <div class="flow-card-desc">Client/Retail participants cash positioning.</div>
-                    </div>
-
                 </div>
             </div>
 
@@ -759,7 +742,7 @@
                         </div>
                     </div>
 
-                    <!-- 2. RETAIL POSITIONS (MOVED ABOVE DII) -->
+                    <!-- 2. RETAIL POSITIONS -->
                     <div class="oi-card-gold">
                         <div class="oi-header-giant">
                             <h3>Retail Positions</h3>
@@ -790,7 +773,7 @@
                         </div>
                     </div>
 
-                    <!-- 3. DII POSITIONS (STANDALONE SCALING) -->
+                    <!-- 3. DII POSITIONS -->
                     <div class="oi-card-gold">
                         <div class="oi-header-giant">
                             <h3>DII Positions</h3>
@@ -840,17 +823,10 @@
                 </div>
             </div>
 
-            <div class="giant-bias-banner" style="text-align:left; padding: 30px 24px; margin-bottom: 24px;">
+            <div class="giant-bias-banner" style="text-align:left; padding: 30px 24px;">
                 <h3 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 20px; text-align:center;">DII MONEY FLOW</h3>
                 <div style="position: relative; height: 380px; width: 100%;">
                     <canvas id="diiFlowChart"></canvas>
-                </div>
-            </div>
-
-            <div class="giant-bias-banner" style="text-align:left; padding: 30px 24px;">
-                <h3 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 20px; text-align:center;">RETAIL MONEY FLOW</h3>
-                <div style="position: relative; height: 380px; width: 100%;">
-                    <canvas id="retailFlowChart"></canvas>
                 </div>
             </div>
         </div>
@@ -923,16 +899,13 @@
 
             valEl.innerText = rawValue;
 
-            // Extract integer value from strings like "+234K" or "-85K"
             const num = Math.abs(parseInt(rawValue.replace(/[^0-9-]/g, '')) || 0);
             
-            // Calculate height percentage relative to highest value in comparison pair
             let percent = maxThreshold > 0 ? Math.min(Math.round((num / maxThreshold) * 100), 100) : 10;
-            if (percent < 10) percent = 10; // Maintain minimum visible height
+            if (percent < 10) percent = 10;
 
             barEl.style.height = percent + '%';
 
-            // Apply red or green styling based on sign
             if (rawValue.startsWith('-')) {
                 valEl.className = 'vert-bar-val val-bear';
                 barEl.className = 'vert-bar-fill bar-fill-red';
@@ -950,15 +923,14 @@
                 // Set Date
                 document.getElementById('data-date').innerText = globalData.date;
 
-                // Set Cash Data
+                // Set Cash Data (FII & DII only)
                 formatVal('cash-fii', globalData.cash.fii);
                 formatVal('cash-dii', globalData.cash.dii);
-                formatVal('cash-retail', globalData.cash.retail);
 
                 const deriv = globalData.derivatives;
                 const parseVal = (str) => Math.abs(parseInt(str.replace(/[^0-9-]/g, '')) || 0);
 
-                // --- 1. DIRECT COMPARISON: FII vs RETAIL (Futures vs Futures, Calls vs Calls, Puts vs Puts) ---
+                // --- 1. DIRECT COMPARISON: FII vs RETAIL ---
                 const maxFut = Math.max(parseVal(deriv.fii.futures), parseVal(deriv.retail.futures)) || 1;
                 const maxCall = Math.max(parseVal(deriv.fii.calls), parseVal(deriv.retail.calls)) || 1;
                 const maxPut = Math.max(parseVal(deriv.fii.puts), parseVal(deriv.retail.puts)) || 1;
@@ -968,12 +940,12 @@
                 updateBar('fii-call', 'bar-fii-call', deriv.fii.calls, maxCall);
                 updateBar('fii-put', 'bar-fii-put', deriv.fii.puts, maxPut);
 
-                // Retail Bars (Scaled side-by-side against FII)
+                // Retail Bars
                 updateBar('ret-fut', 'bar-ret-fut', deriv.retail.futures, maxFut);
                 updateBar('ret-call', 'bar-ret-call', deriv.retail.calls, maxCall);
                 updateBar('ret-put', 'bar-ret-put', deriv.retail.puts, maxPut);
 
-                // --- 2. DII POSITIONS (SCALED INDEPENDENTLY ON ITS OWN MAX) ---
+                // --- 2. DII POSITIONS (INDEPENDENT) ---
                 const diiMax = Math.max(
                     parseVal(deriv.dii.futures),
                     parseVal(deriv.dii.calls),
@@ -1041,7 +1013,6 @@
             if (!graphData) return;
             renderFlowChart('fiiFlowChart', graphData.dates, graphData.fii);
             renderFlowChart('diiFlowChart', graphData.dates, graphData.dii);
-            renderFlowChart('retailFlowChart', graphData.dates, graphData.retail);
         }
 
         window.addEventListener('DOMContentLoaded', fetchDailyData);
