@@ -12,8 +12,8 @@
         :root {
             /* Base Palette */
             --c-white: #ffffff;
-            --c-green: #1d4d22; /* Muted Green */
-            --c-red: #d32f2f;   /* Red */
+            --c-green: #15803d; /* Premium Forest Green */
+            --c-red: #b91c1c;   /* Deep Crimson Red */
             
             /* Metallic Gradients & Flats */
             --gold-gradient: linear-gradient(135deg, #c4a143 0%, #edd382 45%, #e2c266 55%, #b58d2a 100%);
@@ -39,7 +39,6 @@
             margin: 0;
             padding: 0;
             font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-            /* iOS Specific Fixes */
             -webkit-tap-highlight-color: rgba(0,0,0,0.1);
             touch-action: manipulation;
         }
@@ -347,7 +346,6 @@
         }
 
         .disclaimer-box h4:first-child { margin-top: 0; }
-
         .disclaimer-box p { margin-bottom: 4px; }
 
         /* DASHBOARD METRICS */
@@ -418,18 +416,36 @@
             }
         }
 
+        /* ENHANCED PROFESSIONAL NUMERIC STYLING */
         .flow-card-value {
             font-family: 'JetBrains Mono', monospace;
-            font-size: clamp(2.2rem, 4.8vw, 3.4rem);
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
             font-weight: 800 !important;
-            letter-spacing: -1px;
+            letter-spacing: -0.5px;
             line-height: 1;
             white-space: nowrap;
-            font-feature-settings: "tnum";
+            font-feature-settings: "tnum", "zero";
+            padding: 8px 18px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s ease-in-out;
         }
 
-        .val-bull { color: var(--c-green) !important; }
-        .val-bear { color: var(--c-red) !important; }
+        .val-bull { 
+            color: var(--c-green) !important; 
+            background: rgba(21, 128, 61, 0.06);
+            border: 1px solid rgba(21, 128, 61, 0.25);
+            box-shadow: inset 0 1px 2px rgba(21, 128, 61, 0.05);
+        }
+
+        .val-bear { 
+            color: var(--c-red) !important; 
+            background: rgba(185, 28, 28, 0.06);
+            border: 1px solid rgba(185, 28, 28, 0.25);
+            box-shadow: inset 0 1px 2px rgba(185, 28, 28, 0.05);
+        }
 
         .flow-card-desc {
             font-size: 0.95rem;
@@ -488,13 +504,15 @@
 
         .vert-bar-val {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 800;
             margin-bottom: 8px;
             text-align: center;
             white-space: nowrap;
             letter-spacing: -0.5px;
-            font-feature-settings: "tnum";
+            font-feature-settings: "tnum", "zero";
+            padding: 4px 8px;
+            border-radius: 6px;
         }
 
         .vert-bar-track {
@@ -581,7 +599,7 @@
                 max-width: 100%;
                 height: 170px;
             }
-            .vert-bar-val { font-size: 0.85rem; }
+            .vert-bar-val { font-size: 0.8rem; padding: 2px 4px; }
             .vert-bar-label { font-size: 0.78rem; }
             .oi-header-giant h3 { font-size: 1.4rem; }
 
@@ -616,25 +634,17 @@
 
         <!-- ================= PAGE 1: HOMEPAGE ================= -->
         <div id="page-home" class="page-view active">
-            
-            <!-- HERO SECTION -->
             <section class="hero-section">
                 <div class="hero-container">
                     <h1 class="hero-headline">For Traders, By Traders</h1>
-                    
-                    <p class="hero-mission-bold">
-                        EMPOWERING RETAIL TRADERS WITH INSTITUTIONAL CLARITY
-                    </p>
-
+                    <p class="hero-mission-bold">EMPOWERING RETAIL TRADERS WITH INSTITUTIONAL CLARITY</p>
                     <p class="hero-subtitle-small">
                         Amitraaj.in builds high-precision, no-nonsense analytical tools designed specifically to help retail traders track market money flow and navigate complex participant positioning.
                     </p>
-
                     <button type="button" class="btn-cta" onclick="showPage('tools')">Tools List ›</button>
                 </div>
             </section>
 
-            <!-- OUR TOOLS SECTION (SECOND ELEMENT) -->
             <section class="homepage-block">
                 <div class="block-header">
                     <div class="section-tag">ANALYTICS SUITE</div>
@@ -659,7 +669,6 @@
                 </div>
             </section>
 
-            <!-- ABOUT SECTION -->
             <section class="homepage-block" style="border-bottom: none;">
                 <div class="block-header">
                     <div class="section-tag">ABOUT AMITRAAJ.IN</div>
@@ -673,7 +682,6 @@
                 </div>
             </section>
 
-            <!-- DISCLAIMER SECTION -->
             <section class="homepage-block" style="border-bottom: none;">
                 <div class="block-header">
                     <div class="section-tag">RISK & LEGAL DISCLAIMER</div>
@@ -691,16 +699,12 @@
                     <p>Trading and investing in equities and derivatives carries high financial risk. Please consult a SEBI-registered financial advisor before making any trading decision.</p>
                 </div>
             </section>
-
         </div>
 
         <!-- ================= PAGE 2: OUR TOOLS PAGE ================= -->
         <div id="page-tools" class="page-view">
-            
             <div class="back-nav-bar">
-                <button type="button" class="btn-back-arrow" onclick="showPage('home')">
-                    ← Back to Home
-                </button>
+                <button type="button" class="btn-back-arrow" onclick="showPage('home')">← Back to Home</button>
             </div>
 
             <div style="margin-bottom: 32px;">
@@ -731,11 +735,8 @@
 
         <!-- ================= PAGE 3: DAILY FOOTPRINTS DASHBOARD ================= -->
         <div id="page-latest" class="page-view">
-            
             <div class="back-nav-bar">
-                <button type="button" class="btn-back-arrow" onclick="showPage('tools')">
-                    ← Back to Tools List
-                </button>
+                <button type="button" class="btn-back-arrow" onclick="showPage('tools')">← Back to Tools List</button>
             </div>
 
             <div style="margin-bottom: 28px;">
@@ -749,7 +750,6 @@
             <div style="margin-bottom: 40px;">
                 <h2 class="serif-title" style="font-size: 2.2rem; margin-bottom: 20px;">CASH MARKET DATA</h2>
                 <div class="vertical-flow-stack">
-                    
                     <div class="flow-card-gold">
                         <div class="flow-card-row">
                             <div class="flow-card-title title-gold">FII</div>
@@ -765,20 +765,17 @@
                         </div>
                         <div class="flow-card-desc">Domestic Mutual Funds & Institutions equity exposure.</div>
                     </div>
-
                 </div>
             </div>
 
             <div style="margin-bottom: 40px;">
-                <!-- CASH MARKET TREND BUTTON -->
                 <button type="button" class="btn-cta" onclick="showPage('archive')" style="padding: 12px 24px; font-size: 0.95rem; margin-bottom: 30px;">
                     📊 Cash Market Trend ›
                 </button>
 
                 <h2 class="serif-title" style="font-size: 2.2rem; margin-bottom: 20px;">DERIVATIVES DATA</h2>
                 <div class="vertical-oi-stack">
-                    
-                    <!-- 1. FII POSITIONS -->
+                    <!-- FII POSITIONS -->
                     <div class="oi-card-gold">
                         <div class="oi-header-giant">
                             <h3>FII Positions</h3>
@@ -787,29 +784,23 @@
                         <div class="oi-vertical-chart-container">
                             <div class="vert-bar-group">
                                 <span class="vert-bar-val" id="fii-fut">--</span>
-                                <div class="vert-bar-track">
-                                    <div class="vert-bar-fill" id="bar-fii-fut"></div>
-                                </div>
+                                <div class="vert-bar-track"><div class="vert-bar-fill" id="bar-fii-fut"></div></div>
                                 <span class="vert-bar-label">Futures</span>
                             </div>
                             <div class="vert-bar-group">
                                 <span class="vert-bar-val" id="fii-call">--</span>
-                                <div class="vert-bar-track">
-                                    <div class="vert-bar-fill" id="bar-fii-call"></div>
-                                </div>
+                                <div class="vert-bar-track"><div class="vert-bar-fill" id="bar-fii-call"></div></div>
                                 <span class="vert-bar-label">Calls</span>
                             </div>
                             <div class="vert-bar-group">
                                 <span class="vert-bar-val" id="fii-put">--</span>
-                                <div class="vert-bar-track">
-                                    <div class="vert-bar-fill" id="bar-fii-put"></div>
-                                </div>
+                                <div class="vert-bar-track"><div class="vert-bar-fill" id="bar-fii-put"></div></div>
                                 <span class="vert-bar-label">Puts</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 2. RETAIL POSITIONS -->
+                    <!-- RETAIL POSITIONS -->
                     <div class="oi-card-gold">
                         <div class="oi-header-giant">
                             <h3>Retail Positions</h3>
@@ -818,29 +809,23 @@
                         <div class="oi-vertical-chart-container">
                             <div class="vert-bar-group">
                                 <span class="vert-bar-val" id="ret-fut">--</span>
-                                <div class="vert-bar-track">
-                                    <div class="vert-bar-fill" id="bar-ret-fut"></div>
-                                </div>
+                                <div class="vert-bar-track"><div class="vert-bar-fill" id="bar-ret-fut"></div></div>
                                 <span class="vert-bar-label">Futures</span>
                             </div>
                             <div class="vert-bar-group">
                                 <span class="vert-bar-val" id="ret-call">--</span>
-                                <div class="vert-bar-track">
-                                    <div class="vert-bar-fill" id="bar-ret-call"></div>
-                                </div>
+                                <div class="vert-bar-track"><div class="vert-bar-fill" id="bar-ret-call"></div></div>
                                 <span class="vert-bar-label">Calls</span>
                             </div>
                             <div class="vert-bar-group">
                                 <span class="vert-bar-val" id="ret-put">--</span>
-                                <div class="vert-bar-track">
-                                    <div class="vert-bar-fill" id="bar-ret-put"></div>
-                                </div>
+                                <div class="vert-bar-track"><div class="vert-bar-fill" id="bar-ret-put"></div></div>
                                 <span class="vert-bar-label">Puts</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 3. DII POSITIONS -->
+                    <!-- DII POSITIONS -->
                     <div class="oi-card-gold">
                         <div class="oi-header-giant">
                             <h3>DII Positions</h3>
@@ -849,40 +834,29 @@
                         <div class="oi-vertical-chart-container">
                             <div class="vert-bar-group">
                                 <span class="vert-bar-val" id="dii-fut">--</span>
-                                <div class="vert-bar-track">
-                                    <div class="vert-bar-fill" id="bar-dii-fut"></div>
-                                </div>
+                                <div class="vert-bar-track"><div class="vert-bar-fill" id="bar-dii-fut"></div></div>
                                 <span class="vert-bar-label">Futures</span>
                             </div>
                             <div class="vert-bar-group">
                                 <span class="vert-bar-val" id="dii-call">--</span>
-                                <div class="vert-bar-track">
-                                    <div class="vert-bar-fill" id="bar-dii-call"></div>
-                                </div>
+                                <div class="vert-bar-track"><div class="vert-bar-fill" id="bar-dii-call"></div></div>
                                 <span class="vert-bar-label">Calls</span>
                             </div>
                             <div class="vert-bar-group">
                                 <span class="vert-bar-val" id="dii-put">--</span>
-                                <div class="vert-bar-track">
-                                    <div class="vert-bar-fill" id="bar-dii-put"></div>
-                                </div>
+                                <div class="vert-bar-track"><div class="vert-bar-fill" id="bar-dii-put"></div></div>
                                 <span class="vert-bar-label">Puts</span>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
-
         </div>
 
         <!-- ================= PAGE 4: GRAPH PAGE ================= -->
         <div id="page-archive" class="page-view">
-            
             <div class="back-nav-bar">
-                <button type="button" class="btn-back-arrow" onclick="showPage('latest')">
-                    ← Back to Daily Footprints
-                </button>
+                <button type="button" class="btn-back-arrow" onclick="showPage('latest')">← Back to Daily Footprints</button>
             </div>
 
             <div style="margin-bottom: 24px;">
@@ -918,7 +892,6 @@
                 </p>
             </div>
         </div>
-
     </div>
 
     <!-- Footer -->
@@ -931,23 +904,17 @@
         let globalData = null;
 
         function showPage(pageId) {
-            document.querySelectorAll('.page-view').forEach(function(p) { 
-                p.classList.remove('active'); 
-            });
-            document.querySelectorAll('.nav-link').forEach(function(l) { 
-                l.classList.remove('active'); 
-            });
+            document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
 
-            var targetPage = document.getElementById('page-' + pageId);
-            if (targetPage) {
-                targetPage.classList.add('active');
-            }
+            const targetPage = document.getElementById('page-' + pageId);
+            if (targetPage) targetPage.classList.add('active');
 
             if (pageId === 'archive' && globalData) {
                 initFlowCharts(globalData.cashGraph);
             }
 
-            var navIndex = ['home', 'tools', 'about'].indexOf(pageId);
+            const navIndex = ['home', 'tools', 'about'].indexOf(pageId);
             if (navIndex !== -1) {
                 document.querySelectorAll('.nav-link')[navIndex].classList.add('active');
             }
@@ -955,11 +922,15 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // ENHANCED FORMATTING FUNCTION
         function formatVal(elId, val) {
             const el = document.getElementById(elId);
             if (!el) return;
-            el.innerText = val;
-            if (val.startsWith('-')) {
+            
+            const rawStr = val ? val.toString().trim() : '--';
+            el.innerText = rawStr;
+
+            if (rawStr.startsWith('-')) {
                 el.className = 'flow-card-value val-bear';
             } else {
                 el.className = 'flow-card-value val-bull';
@@ -974,7 +945,6 @@
             valEl.innerText = rawValue;
 
             const num = Math.abs(parseInt(rawValue.replace(/[^0-9-]/g, '')) || 0);
-            
             let percent = maxThreshold > 0 ? Math.min(Math.round((num / maxThreshold) * 100), 100) : 10;
             if (percent < 10) percent = 10;
 
@@ -994,32 +964,27 @@
                 const response = await fetch('data.json?v=' + new Date().getTime());
                 globalData = await response.json();
 
-                // Set Date
                 document.getElementById('data-date').innerText = globalData.date;
 
-                // Set Cash Data (FII & DII only)
+                // Set Cash Data with enhanced formatting
                 formatVal('cash-fii', globalData.cash.fii);
                 formatVal('cash-dii', globalData.cash.dii);
 
                 const deriv = globalData.derivatives;
                 const parseVal = (str) => Math.abs(parseInt(str.replace(/[^0-9-]/g, '')) || 0);
 
-                // --- 1. DIRECT COMPARISON: FII vs RETAIL ---
                 const maxFut = Math.max(parseVal(deriv.fii.futures), parseVal(deriv.retail.futures)) || 1;
                 const maxCall = Math.max(parseVal(deriv.fii.calls), parseVal(deriv.retail.calls)) || 1;
                 const maxPut = Math.max(parseVal(deriv.fii.puts), parseVal(deriv.retail.puts)) || 1;
 
-                // FII Bars
                 updateBar('fii-fut', 'bar-fii-fut', deriv.fii.futures, maxFut);
                 updateBar('fii-call', 'bar-fii-call', deriv.fii.calls, maxCall);
                 updateBar('fii-put', 'bar-fii-put', deriv.fii.puts, maxPut);
 
-                // Retail Bars
                 updateBar('ret-fut', 'bar-ret-fut', deriv.retail.futures, maxFut);
                 updateBar('ret-call', 'bar-ret-call', deriv.retail.calls, maxCall);
                 updateBar('ret-put', 'bar-ret-put', deriv.retail.puts, maxPut);
 
-                // --- 2. DII POSITIONS (INDEPENDENT) ---
                 const diiMax = Math.max(
                     parseVal(deriv.dii.futures),
                     parseVal(deriv.dii.calls),
@@ -1036,7 +1001,7 @@
         }
 
         function renderFlowChart(canvasId, labels, values) {
-            var ctx = document.getElementById(canvasId);
+            const ctx = document.getElementById(canvasId);
             if (!ctx || typeof Chart === 'undefined' || ctx.dataset.rendered === 'true') return;
             ctx.dataset.rendered = 'true';
 
@@ -1047,7 +1012,7 @@
                     datasets: [{
                         label: 'Net Flow (₹ Cr)',
                         data: values,
-                        backgroundColor: values.map(function(v) { return v >= 0 ? '#1d4d22' : '#d32f2f'; }),
+                        backgroundColor: values.map(v => v >= 0 ? '#15803d' : '#b91c1c'),
                         borderRadius: 6,
                         borderSkipped: false,
                         maxBarThickness: 46
@@ -1060,9 +1025,7 @@
                         legend: { display: false },
                         tooltip: {
                             callbacks: {
-                                label: function(item) { 
-                                    return (item.raw >= 0 ? '+₹' : '-₹') + Math.abs(item.raw) + ' Cr'; 
-                                }
+                                label: (item) => (item.raw >= 0 ? '+₹' : '-₹') + Math.abs(item.raw) + ' Cr'
                             }
                         }
                     },
@@ -1075,7 +1038,7 @@
                             grid: { color: 'rgba(210,210,210,0.4)' },
                             ticks: {
                                 color: '#4a4a4a',
-                                callback: function(v) { return '₹' + v + ' Cr'; }
+                                callback: (v) => '₹' + v + ' Cr'
                             }
                         }
                     }
