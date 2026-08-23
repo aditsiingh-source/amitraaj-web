@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             /* Base Palette */
@@ -419,10 +419,13 @@
         }
 
         .flow-card-value {
-            font-size: clamp(2rem, 4.5vw, 3.2rem);
-            font-weight: 900 !important;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(2.2rem, 4.8vw, 3.4rem);
+            font-weight: 800 !important;
+            letter-spacing: -1px;
             line-height: 1;
             white-space: nowrap;
+            font-feature-settings: "tnum";
         }
 
         .val-bull { color: var(--c-green) !important; }
@@ -484,11 +487,14 @@
         }
 
         .vert-bar-val {
-            font-size: 1.05rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
             font-weight: 800;
             margin-bottom: 8px;
             text-align: center;
             white-space: nowrap;
+            letter-spacing: -0.5px;
+            font-feature-settings: "tnum";
         }
 
         .vert-bar-track {
