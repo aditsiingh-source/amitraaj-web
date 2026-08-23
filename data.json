@@ -1,9 +1,9 @@
 {
   "date": "23 AUG 2026",
   "cash": {
-    "fii": "+200",
-    "dii": "-450",
-    "retail": "+300"
+    "fii": "+₹200 Cr",
+    "dii": "-₹450 Cr",
+    "retail": "+₹300 Cr"
   },
   "derivatives": {
     "fii": {
@@ -18,7 +18,7 @@
     },
     "retail": {
       "futures": "+10K",
-      "calls": "+30K",
+      "calls": "+50K",
       "puts": "-15K"
     }
   },
