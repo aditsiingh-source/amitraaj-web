@@ -874,175 +874,189 @@
         <div>NSE EOD Visualizer • Built Open & Free for All Traders</div>
     </footer>
 
-   <script>
-    let globalData = null;
+    <script>
+        let globalData = null;
 
-    function showPage(pageId) {
-        document.querySelectorAll('.page-view').forEach(function(p) { 
-            p.classList.remove('active'); 
-        });
-        document.querySelectorAll('.nav-link').forEach(function(l) { 
-            l.classList.remove('active'); 
-        });
+        function showPage(pageId) {
+            document.querySelectorAll('.page-view').forEach(function(p) { 
+                p.classList.remove('active'); 
+            });
+            document.querySelectorAll('.nav-link').forEach(function(l) { 
+                l.classList.remove('active'); 
+            });
 
-        var targetPage = document.getElementById('page-' + pageId);
-        if (targetPage) {
-            targetPage.classList.add('active');
+            var targetPage = document.getElementById('page-' + pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+
+            if (pageId === 'archive' && globalData) {
+                initFlowCharts(globalData.cashGraph);
+            }
+
+            var navIndex = ['home', 'latest', 'archive', 'about'].indexOf(pageId);
+            if (navIndex !== -1) {
+                document.querySelectorAll('.nav-link')[navIndex].classList.add('active');
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        if (pageId === 'archive' && globalData) {
-            initFlowCharts(globalData.cashGraph);
+        function formatVal(elId, val) {
+            const el = document.getElementById(elId);
+            if (!el) return;
+            el.innerText = val;
+            if (val.startsWith('-')) {
+                el.className = 'flow-card-value val-bear';
+            } else {
+                el.className = 'flow-card-value val-bull';
+            }
         }
 
-        var navIndex = ['home', 'latest', 'archive', 'about'].indexOf(pageId);
-        if (navIndex !== -1) {
-            document.querySelectorAll('.nav-link')[navIndex].classList.add('active');
+        function updateBar(valId, barId, rawValue, maxThreshold) {
+            const valEl = document.getElementById(valId);
+            const barEl = document.getElementById(barId);
+            if (!valEl || !barEl) return;
+
+            valEl.innerText = rawValue;
+
+            // Extract integer value from strings like "+234K" or "-85K"
+            const num = Math.abs(parseInt(rawValue.replace(/[^0-9-]/g, '')) || 0);
+            
+            // Calculate height percentage relative to highest value in current dataset
+            let percent = maxThreshold > 0 ? Math.min(Math.round((num / maxThreshold) * 100), 100) : 10;
+            if (percent < 10) percent = 10; // Maintain minimum visible height
+
+            barEl.style.height = percent + '%';
+
+            // Apply red or green styling based on sign
+            if (rawValue.startsWith('-')) {
+                valEl.className = 'vert-bar-val val-bear';
+                barEl.className = 'vert-bar-fill bar-fill-red';
+            } else {
+                valEl.className = 'vert-bar-val val-bull';
+                barEl.className = 'vert-bar-fill bar-fill-green';
+            }
         }
 
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function formatVal(elId, val) {
-        const el = document.getElementById(elId);
-        if (!el) return;
-        el.innerText = val;
-        if (val.startsWith('-')) {
-            el.className = 'flow-card-value val-bear';
-        } else {
-            el.className = 'flow-card-value val-bull';
+        // Returns peak value specifically across all 3 participants for Futures
+        function getMaxForCategory(deriv, category) {
+            let max = 1;
+            ['fii', 'dii', 'retail'].forEach(group => {
+                const val = Math.abs(parseInt(deriv[group][category].replace(/[^0-9-]/g, '')) || 0);
+                if (val > max) max = val;
+            });
+            return max;
         }
-    }
 
-    function updateBar(valId, barId, rawValue, maxThreshold) {
-        const valEl = document.getElementById(valId);
-        const barEl = document.getElementById(barId);
-        if (!valEl || !barEl) return;
+        async function fetchDailyData() {
+            try {
+                const response = await fetch('data.json?v=' + new Date().getTime());
+                globalData = await response.json();
 
-        valEl.innerText = rawValue;
+                // Set Date
+                document.getElementById('data-date').innerText = globalData.date;
 
-        // Parse integer from strings like "+234K", "-85K", or "+1.2K"
-        const num = Math.abs(parseInt(rawValue.replace(/[^0-9-]/g, '')) || 0);
-        
-        // Calculate relative height percentage against category max
-        let percent = maxThreshold > 0 ? Math.min(Math.round((num / maxThreshold) * 100), 100) : 10;
-        if (percent < 10) percent = 10; // Minimum visible bar height
+                // Set Cash Data
+                formatVal('cash-fii', globalData.cash.fii);
+                formatVal('cash-dii', globalData.cash.dii);
+                formatVal('cash-retail', globalData.cash.retail);
 
-        barEl.style.height = percent + '%';
+                const deriv = globalData.derivatives;
 
-        // Apply green or red depending on postive/negative sign
-        if (rawValue.startsWith('-')) {
-            valEl.className = 'vert-bar-val val-bear';
-            barEl.className = 'vert-bar-fill bar-fill-red';
-        } else {
-            valEl.className = 'vert-bar-val val-bull';
-            barEl.className = 'vert-bar-fill bar-fill-green';
+                // 1. FUTURES: Compared WITH EACH OTHER (FII vs DII vs Retail)
+                const maxFutures = getMaxForCategory(deriv, 'futures');
+                updateBar('fii-fut', 'bar-fii-fut', deriv.fii.futures, maxFutures);
+                updateBar('dii-fut', 'bar-dii-fut', deriv.dii.futures, maxFutures);
+                updateBar('ret-fut', 'bar-ret-fut', deriv.retail.futures, maxFutures);
+
+                // 2. OPTIONS: CALL vs PUT compared WITHIN EACH SEGMENT
+                
+                // FII Segment (Calls vs Puts)
+                const fiiOptMax = Math.max(
+                    Math.abs(parseInt(deriv.fii.calls.replace(/[^0-9-]/g, '')) || 0),
+                    Math.abs(parseInt(deriv.fii.puts.replace(/[^0-9-]/g, '')) || 0)
+                ) || 1;
+                updateBar('fii-call', 'bar-fii-call', deriv.fii.calls, fiiOptMax);
+                updateBar('fii-put', 'bar-fii-put', deriv.fii.puts, fiiOptMax);
+
+                // DII Segment (Calls vs Puts)
+                const diiOptMax = Math.max(
+                    Math.abs(parseInt(deriv.dii.calls.replace(/[^0-9-]/g, '')) || 0),
+                    Math.abs(parseInt(deriv.dii.puts.replace(/[^0-9-]/g, '')) || 0)
+                ) || 1;
+                updateBar('dii-call', 'bar-dii-call', deriv.dii.calls, diiOptMax);
+                updateBar('dii-put', 'bar-dii-put', deriv.dii.puts, diiOptMax);
+
+                // Retail Segment (Calls vs Puts)
+                const retOptMax = Math.max(
+                    Math.abs(parseInt(deriv.retail.calls.replace(/[^0-9-]/g, '')) || 0),
+                    Math.abs(parseInt(deriv.retail.puts.replace(/[^0-9-]/g, '')) || 0)
+                ) || 1;
+                updateBar('ret-call', 'bar-ret-call', deriv.retail.calls, retOptMax);
+                updateBar('ret-put', 'bar-ret-put', deriv.retail.puts, retOptMax);
+
+            } catch (err) {
+                console.error("Error fetching data.json:", err);
+            }
         }
-    }
 
-    // Returns peak value specifically for a single instrument type (futures, calls, or puts)
-    function getMaxForCategory(deriv, category) {
-        let max = 1;
-        ['fii', 'dii', 'retail'].forEach(group => {
-            const val = Math.abs(parseInt(deriv[group][category].replace(/[^0-9-]/g, '')) || 0);
-            if (val > max) max = val;
-        });
-        return max;
-    }
+        function renderFlowChart(canvasId, labels, values) {
+            var ctx = document.getElementById(canvasId);
+            if (!ctx || typeof Chart === 'undefined' || ctx.dataset.rendered === 'true') return;
+            ctx.dataset.rendered = 'true';
 
-    async function fetchDailyData() {
-        try {
-            const response = await fetch('data.json?v=' + new Date().getTime());
-            globalData = await response.json();
-
-            // Set Date
-            document.getElementById('data-date').innerText = globalData.date;
-
-            // Set Cash Data
-            formatVal('cash-fii', globalData.cash.fii);
-            formatVal('cash-dii', globalData.cash.dii);
-            formatVal('cash-retail', globalData.cash.retail);
-
-            // Compute separate peak values per instrument type
-            const maxFutures = getMaxForCategory(globalData.derivatives, 'futures');
-            const maxCalls   = getMaxForCategory(globalData.derivatives, 'calls');
-            const maxPuts    = getMaxForCategory(globalData.derivatives, 'puts');
-
-            // Render Futures Bars (scaled against maxFutures)
-            updateBar('fii-fut', 'bar-fii-fut', globalData.derivatives.fii.futures, maxFutures);
-            updateBar('dii-fut', 'bar-dii-fut', globalData.derivatives.dii.futures, maxFutures);
-            updateBar('ret-fut', 'bar-ret-fut', globalData.derivatives.retail.futures, maxFutures);
-
-            // Render Calls Bars (scaled against maxCalls)
-            updateBar('fii-call', 'bar-fii-call', globalData.derivatives.fii.calls, maxCalls);
-            updateBar('dii-call', 'bar-dii-call', globalData.derivatives.dii.calls, maxCalls);
-            updateBar('ret-call', 'bar-ret-call', globalData.derivatives.retail.calls, maxCalls);
-
-            // Render Puts Bars (scaled against maxPuts)
-            updateBar('fii-put', 'bar-fii-put', globalData.derivatives.fii.puts, maxPuts);
-            updateBar('dii-put', 'bar-dii-put', globalData.derivatives.dii.puts, maxPuts);
-            updateBar('ret-put', 'bar-ret-put', globalData.derivatives.retail.puts, maxPuts);
-
-        } catch (err) {
-            console.error("Error fetching data.json:", err);
-        }
-    }
-
-    function renderFlowChart(canvasId, labels, values) {
-        var ctx = document.getElementById(canvasId);
-        if (!ctx || typeof Chart === 'undefined' || ctx.dataset.rendered === 'true') return;
-        ctx.dataset.rendered = 'true';
-
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Net Flow (₹ Cr)',
-                    data: values,
-                    backgroundColor: values.map(function(v) { return v >= 0 ? '#1d4d22' : '#d32f2f'; }),
-                    borderRadius: 6,
-                    borderSkipped: false,
-                    maxBarThickness: 46
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            label: function(item) { 
-                                return (item.raw >= 0 ? '+₹' : '-₹') + Math.abs(item.raw) + ' Cr'; 
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Net Flow (₹ Cr)',
+                        data: values,
+                        backgroundColor: values.map(function(v) { return v >= 0 ? '#1d4d22' : '#d32f2f'; }),
+                        borderRadius: 6,
+                        borderSkipped: false,
+                        maxBarThickness: 46
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(item) { 
+                                    return (item.raw >= 0 ? '+₹' : '-₹') + Math.abs(item.raw) + ' Cr'; 
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#4a4a4a', font: { weight: 600 } }
+                        },
+                        y: {
+                            grid: { color: 'rgba(210,210,210,0.4)' },
+                            ticks: {
+                                color: '#4a4a4a',
+                                callback: function(v) { return '₹' + v + ' Cr'; }
                             }
                         }
                     }
-                },
-                scales: {
-                    x: {
-                        grid: { display: false },
-                        ticks: { color: '#4a4a4a', font: { weight: 600 } }
-                    },
-                    y: {
-                        grid: { color: 'rgba(210,210,210,0.4)' },
-                        ticks: {
-                            color: '#4a4a4a',
-                            callback: function(v) { return '₹' + v + ' Cr'; }
-                        }
-                    }
                 }
-            }
-        });
-    }
+            });
+        }
 
-    function initFlowCharts(graphData) {
-        if (!graphData) return;
-        renderFlowChart('fiiFlowChart', graphData.dates, graphData.fii);
-        renderFlowChart('diiFlowChart', graphData.dates, graphData.dii);
-        renderFlowChart('retailFlowChart', graphData.dates, graphData.retail);
-    }
+        function initFlowCharts(graphData) {
+            if (!graphData) return;
+            renderFlowChart('fiiFlowChart', graphData.dates, graphData.fii);
+            renderFlowChart('diiFlowChart', graphData.dates, graphData.dii);
+            renderFlowChart('retailFlowChart', graphData.dates, graphData.retail);
+        }
 
-    window.addEventListener('DOMContentLoaded', fetchDailyData);
-</script>
+        window.addEventListener('DOMContentLoaded', fetchDailyData);
+    </script>
 </body>
 </html>
