@@ -17,7 +17,7 @@ all_csvs = glob.glob('*.csv')
 # Filter derivative files
 deriv_files = sorted([f for f in all_csvs if 'fao_participant_oi' in f.lower()])
 if len(deriv_files) < 2:
-    raise ValueError(f"Found {len(deriv_files)} FAO files. Need at least 2 files (e.g. 21st and 24th) in repo!")
+    raise ValueError(f"Found {len(deriv_files)} FAO files. Need at least 2 files in repo!")
 
 prev_file, curr_file = deriv_files[-2], deriv_files[-1]
 print(f"Using Previous FAO: {prev_file}")
@@ -34,7 +34,7 @@ else:
     date_str_json = data['date']
     date_graph_str = "Latest"
 
-# 4. Find & Parse Cash Market File (handles BOM & dirty headers)
+# 4. Find & Parse Cash Market File (Positional Indexing)
 cash_files = [f for f in all_csvs if 'fii-dii-combined' in f.lower() or 'fii_dii' in f.lower()]
 if not cash_files:
     raise ValueError("No cash market CSV file found matching '*fii-dii-combined*.csv'")
@@ -42,10 +42,10 @@ if not cash_files:
 cash_file = cash_files[0]
 print(f"Using Cash File: {cash_file}")
 
-# Read raw CSV to bypass broken headers / trailing quotes / BOM
+# Read CSV bypassing UTF-8 BOM byte prefixes
 cash_df = pd.read_csv(cash_file, encoding='utf-8-sig')
 
-# Locate FII and DII rows by checking string values across all cells
+# Search rows by value instead of column header string name
 fii_row = cash_df[cash_df.apply(lambda r: r.astype(str).str.contains('FII', case=False).any(), axis=1)]
 dii_row = cash_df[cash_df.apply(lambda r: r.astype(str).str.contains('DII', case=False).any(), axis=1)]
 
@@ -99,7 +99,7 @@ with open('data.json', 'w') as f:
 
 print("SUCCESS: data.json updated successfully!")
 
-# 7. Auto-cleanup: Remove older derivative CSVs, keep only the latest 2
+# 7. Auto-cleanup: Keep only latest 2 derivative files
 if len(deriv_files) > 2:
     for old_file in deriv_files[:-2]:
         try:
