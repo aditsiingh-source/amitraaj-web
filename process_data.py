@@ -2,6 +2,7 @@ import pandas as pd
 import json
 import re
 import glob
+import os
 from datetime import datetime
 
 print("--- STARTING CSV AUTOMATION SCRIPT ---")
@@ -33,7 +34,7 @@ else:
     date_str_json = data['date']
     date_graph_str = "Latest"
 
-# 4. Find & Parse Cash Market File (Positional Indexing)
+# 4. Find & Parse Cash Market File (handles BOM & dirty headers)
 cash_files = [f for f in all_csvs if 'fii-dii-combined' in f.lower() or 'fii_dii' in f.lower()]
 if not cash_files:
     raise ValueError("No cash market CSV file found matching '*fii-dii-combined*.csv'")
@@ -41,25 +42,23 @@ if not cash_files:
 cash_file = cash_files[0]
 print(f"Using Cash File: {cash_file}")
 
-cash_df = pd.read_csv(cash_file)
+# Read raw CSV to bypass broken headers / trailing quotes / BOM
+cash_df = pd.read_csv(cash_file, encoding='utf-8-sig')
 
-# Extract using positional index (Column 0 = CATEGORY, Last Column = NET VALUE)
-fii_mask = cash_df.iloc[:, 0].astype(str).str.contains('FII', case=False, na=False)
-dii_mask = cash_df.iloc[:, 0].astype(str).str.contains('DII', case=False, na=False)
+# Locate FII and DII rows by checking string values across all cells
+fii_row = cash_df[cash_df.apply(lambda r: r.astype(str).str.contains('FII', case=False).any(), axis=1)]
+dii_row = cash_df[cash_df.apply(lambda r: r.astype(str).str.contains('DII', case=False).any(), axis=1)]
 
-fii_val_str = str(cash_df[fii_mask].iloc[0, -1]).replace(',', '').strip()
-dii_val_str = str(cash_df[dii_mask].iloc[0, -1]).replace(',', '').strip()
-
-fii_cash = round(float(fii_val_str))
-dii_cash = round(float(dii_val_str))
+fii_cash = round(float(str(fii_row.iloc[0, -1]).replace(',', '').strip()))
+dii_cash = round(float(str(dii_row.iloc[0, -1]).replace(',', '').strip()))
 
 print(f"Parsed Cash -> FII: {fii_cash}, DII: {dii_cash}")
 
 # 5. Parse Net Positions from Derivative CSVs
 def get_net(filepath):
-    df = pd.read_csv(filepath)
+    df = pd.read_csv(filepath, encoding='utf-8-sig')
     if 'Client Type' not in df.columns:
-        df = pd.read_csv(filepath, skiprows=1)
+        df = pd.read_csv(filepath, skiprows=1, encoding='utf-8-sig')
     
     df.columns = [str(c).strip() for c in df.columns]
     res = {}
@@ -88,14 +87,23 @@ for key in ['fii', 'dii', 'retail']:
     data['derivatives'][key]['calls'] = fmt(curr_net[key]['call'] - prev_net[key]['call'])
     data['derivatives'][key]['puts'] = fmt(curr_net[key]['put'] - prev_net[key]['put'])
 
-# Slide cash trend graph only if date changed
+# Slide cash trend graph
 if data['cashGraph']['dates'][-1] != date_graph_str:
     data['cashGraph']['dates'] = data['cashGraph']['dates'][1:] + [date_graph_str]
     data['cashGraph']['fii'] = data['cashGraph']['fii'][1:] + [fii_cash]
     data['cashGraph']['dii'] = data['cashGraph']['dii'][1:] + [dii_cash]
 
-# 7. Write data back to file
+# Save updated JSON
 with open('data.json', 'w') as f:
     json.dump(data, f, indent=2)
 
 print("SUCCESS: data.json updated successfully!")
+
+# 7. Auto-cleanup: Remove older derivative CSVs, keep only the latest 2
+if len(deriv_files) > 2:
+    for old_file in deriv_files[:-2]:
+        try:
+            os.remove(old_file)
+            print(f"Cleaned up old file: {old_file}")
+        except Exception as e:
+            print(f"Could not remove {old_file}: {e}")
