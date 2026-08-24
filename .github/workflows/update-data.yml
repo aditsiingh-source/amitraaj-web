@@ -27,11 +27,10 @@ jobs:
       - name: Process CSV files and Update JSON
         run: python process_data.py
 
-      - name: Commit updated JSON
+      - name: Commit updated JSON and Clean CSVs
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data.json
-          git status
-          git commit -m "Auto-update data.json from new CSVs" || echo "No changes to commit"
+          git add -A
+          git commit -m "Auto-update data.json and clean up old CSVs" || echo "No changes to commit"
           git push
