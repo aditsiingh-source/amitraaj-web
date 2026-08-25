@@ -1060,252 +1060,301 @@
         <div>© 2026 amitraaj.in • For Traders By Traders</div>
         <div>amitraaj.in@gmail.com</div>
     </footer>
+<script>
+    let globalData = null;
 
-    <script>
-        let globalData = null;
+    // Direct Mapping of URL Paths -> HTML Page IDs
+    const pathToPageMap = {
+        '': 'home',
+        'home': 'home',
+        'tools': 'tools',
+        'dailyreport': 'latest',
+        'cashgraph': 'archive',
+        'about': 'about'
+    };
 
-        function showPage(pageId) {
-            document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    // Inverse Mapping of HTML Page IDs -> URL Paths
+    const pageToPathMap = {
+        'home': '/',
+        'tools': '/tools',
+        'latest': '/dailyreport',
+        'archive': '/cashgraph',
+        'about': '/about'
+    };
 
-            const targetPage = document.getElementById('page-' + pageId);
-            if (targetPage) targetPage.classList.add('active');
+    function showPage(pageId, pushState = true) {
+        // 1. Hide all page sections & reset nav links
+        document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
 
-            if (pageId === 'archive' && globalData) {
+        // 2. Display the selected page
+        const targetPage = document.getElementById('page-' + pageId);
+        if (targetPage) targetPage.classList.add('active');
+
+        // 3. Render charts if navigating to the cash graph page
+        if (pageId === 'archive' && globalData) {
+            initFlowCharts(globalData.cashGraph);
+        }
+
+        // 4. Update Header Nav Link active states
+        const activeNavMap = { 'home': 0, 'tools': 1, 'about': 2 };
+        if (activeNavMap[pageId] !== undefined) {
+            document.querySelectorAll('.nav-link')[activeNavMap[pageId]].classList.add('active');
+        }
+
+        // 5. Push clean URL to address bar
+        if (pushState) {
+            const targetPath = pageToPathMap[pageId] || '/';
+            window.history.pushState({ pageId: pageId }, '', targetPath);
+        }
+
+        // 6. Smooth scroll back to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Handle Browser Back / Forward buttons correctly
+    window.onpopstate = function(event) {
+        if (event.state && event.state.pageId) {
+            showPage(event.state.pageId, false);
+        } else {
+            handleInitialRouting();
+        }
+    };
+
+    // Parse incoming URL when visiting directly (e.g., amitraaj.in/dailyreport)
+    function handleInitialRouting() {
+        const rawPath = window.location.pathname.replace(/^\/|\/$/g, '');
+        const targetPage = pathToPageMap[rawPath] || 'home';
+        showPage(targetPage, false);
+    }
+
+    function formatVal(elId, val) {
+        const el = document.getElementById(elId);
+        if (!el) return;
+        
+        const rawStr = val ? val.toString().trim() : '--';
+        el.innerText = rawStr;
+
+        if (rawStr.startsWith('-')) {
+            el.className = 'flow-card-value val-bear';
+        } else {
+            el.className = 'flow-card-value val-bull';
+        }
+    }
+
+    function updateBar(valId, barId, rawValue, maxThreshold) {
+        const valEl = document.getElementById(valId);
+        const barEl = document.getElementById(barId);
+        if (!valEl || !barEl) return;
+
+        valEl.innerText = rawValue;
+
+        const num = Math.abs(parseInt(rawValue.replace(/[^0-9-]/g, '')) || 0);
+        let percent = maxThreshold > 0 ? Math.min(Math.round((num / maxThreshold) * 100), 100) : 10;
+        if (percent < 10) percent = 10;
+
+        barEl.style.height = percent + '%';
+
+        if (rawValue.startsWith('-')) {
+            valEl.className = 'vert-bar-val val-bear';
+            barEl.className = 'vert-bar-fill bar-fill-red';
+        } else {
+            valEl.className = 'vert-bar-val val-bull';
+            barEl.className = 'vert-bar-fill bar-fill-green';
+        }
+    }
+
+    async function fetchDailyData() {
+        try {
+            const response = await fetch('data.json?v=' + new Date().getTime());
+            globalData = await response.json();
+
+            document.getElementById('data-date').innerText = globalData.date;
+
+            formatVal('cash-fii', globalData.cash.fii);
+            formatVal('cash-dii', globalData.cash.dii);
+
+            const deriv = globalData.derivatives;
+            const parseVal = (str) => Math.abs(parseInt(str.replace(/[^0-9-]/g, '')) || 0);
+
+            const maxFut = Math.max(parseVal(deriv.fii.futures), parseVal(deriv.retail.futures)) || 1;
+            const maxCall = Math.max(parseVal(deriv.fii.calls), parseVal(deriv.retail.calls)) || 1;
+            const maxPut = Math.max(parseVal(deriv.fii.puts), parseVal(deriv.retail.puts)) || 1;
+
+            updateBar('fii-fut', 'bar-fii-fut', deriv.fii.futures, maxFut);
+            updateBar('fii-call', 'bar-fii-call', deriv.fii.calls, maxCall);
+            updateBar('fii-put', 'bar-fii-put', deriv.fii.puts, maxPut);
+
+            updateBar('ret-fut', 'bar-ret-fut', deriv.retail.futures, maxFut);
+            updateBar('ret-call', 'bar-ret-call', deriv.retail.calls, maxCall);
+            updateBar('ret-put', 'bar-ret-put', deriv.retail.puts, maxPut);
+
+            const diiMax = Math.max(
+                parseVal(deriv.dii.futures),
+                parseVal(deriv.dii.calls),
+                parseVal(deriv.dii.puts)
+            ) || 1;
+
+            updateBar('dii-fut', 'bar-dii-fut', deriv.dii.futures, diiMax);
+            updateBar('dii-call', 'bar-dii-call', deriv.dii.calls, diiMax);
+            updateBar('dii-put', 'bar-dii-put', deriv.dii.puts, diiMax);
+
+            // Re-render chart if user land directly on /cashgraph page
+            const rawPath = window.location.pathname.replace(/^\/|\/$/g, '');
+            if (rawPath === 'cashgraph') {
                 initFlowCharts(globalData.cashGraph);
             }
 
-            const navIndex = ['home', 'tools', 'about'].indexOf(pageId);
-            if (navIndex !== -1) {
-                document.querySelectorAll('.nav-link')[navIndex].classList.add('active');
-            }
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } catch (err) {
+            console.error("Error fetching data.json:", err);
         }
+    }
 
-        function formatVal(elId, val) {
-            const el = document.getElementById(elId);
-            if (!el) return;
-            
-            const rawStr = val ? val.toString().trim() : '--';
-            el.innerText = rawStr;
-
-            if (rawStr.startsWith('-')) {
-                el.className = 'flow-card-value val-bear';
-            } else {
-                el.className = 'flow-card-value val-bull';
-            }
-        }
-
-        function updateBar(valId, barId, rawValue, maxThreshold) {
-            const valEl = document.getElementById(valId);
-            const barEl = document.getElementById(barId);
-            if (!valEl || !barEl) return;
-
-            valEl.innerText = rawValue;
-
-            const num = Math.abs(parseInt(rawValue.replace(/[^0-9-]/g, '')) || 0);
-            let percent = maxThreshold > 0 ? Math.min(Math.round((num / maxThreshold) * 100), 100) : 10;
-            if (percent < 10) percent = 10;
-
-            barEl.style.height = percent + '%';
-
-            if (rawValue.startsWith('-')) {
-                valEl.className = 'vert-bar-val val-bear';
-                barEl.className = 'vert-bar-fill bar-fill-red';
-            } else {
-                valEl.className = 'vert-bar-val val-bull';
-                barEl.className = 'vert-bar-fill bar-fill-green';
-            }
-        }
-
-        async function fetchDailyData() {
-            try {
-                const response = await fetch('data.json?v=' + new Date().getTime());
-                globalData = await response.json();
-
-                document.getElementById('data-date').innerText = globalData.date;
-
-                formatVal('cash-fii', globalData.cash.fii);
-                formatVal('cash-dii', globalData.cash.dii);
-
-                const deriv = globalData.derivatives;
-                const parseVal = (str) => Math.abs(parseInt(str.replace(/[^0-9-]/g, '')) || 0);
-
-                const maxFut = Math.max(parseVal(deriv.fii.futures), parseVal(deriv.retail.futures)) || 1;
-                const maxCall = Math.max(parseVal(deriv.fii.calls), parseVal(deriv.retail.calls)) || 1;
-                const maxPut = Math.max(parseVal(deriv.fii.puts), parseVal(deriv.retail.puts)) || 1;
-
-                updateBar('fii-fut', 'bar-fii-fut', deriv.fii.futures, maxFut);
-                updateBar('fii-call', 'bar-fii-call', deriv.fii.calls, maxCall);
-                updateBar('fii-put', 'bar-fii-put', deriv.fii.puts, maxPut);
-
-                updateBar('ret-fut', 'bar-ret-fut', deriv.retail.futures, maxFut);
-                updateBar('ret-call', 'bar-ret-call', deriv.retail.calls, maxCall);
-                updateBar('ret-put', 'bar-ret-put', deriv.retail.puts, maxPut);
-
-                const diiMax = Math.max(
-                    parseVal(deriv.dii.futures),
-                    parseVal(deriv.dii.calls),
-                    parseVal(deriv.dii.puts)
-                ) || 1;
-
-                updateBar('dii-fut', 'bar-dii-fut', deriv.dii.futures, diiMax);
-                updateBar('dii-call', 'bar-dii-call', deriv.dii.calls, diiMax);
-                updateBar('dii-put', 'bar-dii-put', deriv.dii.puts, diiMax);
-
-            } catch (err) {
-                console.error("Error fetching data.json:", err);
-            }
-        }
-
-        // Custom Value Badge Plugin with Mobile Stack Prevention
-        const linePriceLabelPlugin = {
-            id: 'linePriceLabelPlugin',
-            afterDatasetsDraw(chart) {
-                const { ctx } = chart;
-                const isMobile = window.innerWidth <= 640;
-
-                chart.data.datasets.forEach((dataset, datasetIndex) => {
-                    const meta = chart.getDatasetMeta(datasetIndex);
-                    const boxes = [];
-
-                    meta.data.forEach((element, index) => {
-                        const val = dataset.data[index];
-                        if (val === null || val === undefined) return;
-
-                        const text = (val >= 0 ? '+' : '') + val + (isMobile ? '' : ' Cr');
-                        const isBull = val >= 0;
-
-                        ctx.save();
-                        ctx.font = isMobile ? '700 8.5px "JetBrains Mono", monospace' : '800 11px "JetBrains Mono", monospace';
-                        
-                        const textWidth = ctx.measureText(text).width;
-                        const paddingX = isMobile ? 3 : 6;
-                        const boxWidth = textWidth + paddingX * 2;
-                        const boxHeight = isMobile ? 15 : 20;
-
-                        let x = element.x;
-                        let defaultY = isBull ? element.y - (isMobile ? 18 : 25) : element.y + (isMobile ? 8 : 12);
-                        let y = defaultY;
-
-                        let currentBox = { x: x - boxWidth / 2, y, w: boxWidth, h: boxHeight };
-                        
-                        for (let prev of boxes) {
-                            const overlapX = !(currentBox.x + currentBox.w < prev.x || currentBox.x > prev.x + prev.w);
-                            const overlapY = !(currentBox.y + currentBox.h < prev.y || currentBox.y > prev.y + prev.h);
-
-                            if (overlapX && overlapY) {
-                                y = isBull ? prev.y - boxHeight - 3 : prev.y + prev.h + 3;
-                                currentBox.y = y;
-                            }
-                        }
-
-                        boxes.push(currentBox);
-
-                        // Draw background badge box
-                        ctx.fillStyle = isBull ? 'rgba(21, 128, 61, 0.12)' : 'rgba(185, 28, 28, 0.12)';
-                        ctx.strokeStyle = isBull ? 'rgba(21, 128, 61, 0.4)' : 'rgba(185, 28, 28, 0.4)';
-                        ctx.lineWidth = 1;
-
-                        ctx.beginPath();
-                        ctx.roundRect(x - boxWidth / 2, y, boxWidth, boxHeight, 4);
-                        ctx.fill();
-                        ctx.stroke();
-
-                        // Render text inside badge box
-                        ctx.fillStyle = isBull ? '#15803d' : '#b91c1c';
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'middle';
-                        ctx.fillText(text, x, y + boxHeight / 2);
-
-                        ctx.restore();
-                    });
-                });
-            }
-        };
-
-        function renderFlowChart(canvasId, labels, values) {
-            const ctx = document.getElementById(canvasId);
-            if (!ctx || typeof Chart === 'undefined' || ctx.dataset.rendered === 'true') return;
-            ctx.dataset.rendered = 'true';
-
+    const linePriceLabelPlugin = {
+        id: 'linePriceLabelPlugin',
+        afterDatasetsDraw(chart) {
+            const { ctx } = chart;
             const isMobile = window.innerWidth <= 640;
 
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Net Flow (₹ Cr)',
-                        data: values,
-                        
-                        /* --- BLACK THIN DASHED GRAPH LINE --- */
-                        borderColor: '#1a1a1a',             // Black Line
-                        borderWidth: 1.2,                   // Thin Line
-                        borderDash: [4, 4],                 // Dashed effect
-                        
-                        /* Points */
-                        pointBackgroundColor: values.map(v => v >= 0 ? '#15803d' : '#b91c1c'),
-                        pointBorderColor: '#ffffff',
-                        pointBorderWidth: 1.2,
-                        pointRadius: isMobile ? 3.5 : 5.5,
-                        pointHoverRadius: 6,
-                        tension: 0.15,                      // Slight curve to reduce congestion
-                        fill: false
-                    }]
+            chart.data.datasets.forEach((dataset, datasetIndex) => {
+                const meta = chart.getDatasetMeta(datasetIndex);
+                const boxes = [];
+
+                meta.data.forEach((element, index) => {
+                    const val = dataset.data[index];
+                    if (val === null || val === undefined) return;
+
+                    const text = (val >= 0 ? '+' : '') + val + (isMobile ? '' : ' Cr');
+                    const isBull = val >= 0;
+
+                    ctx.save();
+                    ctx.font = isMobile ? '700 8.5px "JetBrains Mono", monospace' : '800 11px "JetBrains Mono", monospace';
+                    
+                    const textWidth = ctx.measureText(text).width;
+                    const paddingX = isMobile ? 3 : 6;
+                    const boxWidth = textWidth + paddingX * 2;
+                    const boxHeight = isMobile ? 15 : 20;
+
+                    let x = element.x;
+                    let defaultY = isBull ? element.y - (isMobile ? 18 : 25) : element.y + (isMobile ? 8 : 12);
+                    let y = defaultY;
+
+                    let currentBox = { x: x - boxWidth / 2, y, w: boxWidth, h: boxHeight };
+                    
+                    for (let prev of boxes) {
+                        const overlapX = !(currentBox.x + currentBox.w < prev.x || currentBox.x > prev.x + prev.w);
+                        const overlapY = !(currentBox.y + currentBox.h < prev.y || currentBox.y > prev.y + prev.h);
+
+                        if (overlapX && overlapY) {
+                            y = isBull ? prev.y - boxHeight - 3 : prev.y + prev.h + 3;
+                            currentBox.y = y;
+                        }
+                    }
+
+                    boxes.push(currentBox);
+
+                    ctx.fillStyle = isBull ? 'rgba(21, 128, 61, 0.12)' : 'rgba(185, 28, 28, 0.12)';
+                    ctx.strokeStyle = isBull ? 'rgba(21, 128, 61, 0.4)' : 'rgba(185, 28, 28, 0.4)';
+                    ctx.lineWidth = 1;
+
+                    ctx.beginPath();
+                    ctx.roundRect(x - boxWidth / 2, y, boxWidth, boxHeight, 4);
+                    ctx.fill();
+                    ctx.stroke();
+
+                    ctx.fillStyle = isBull ? '#15803d' : '#b91c1c';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(text, x, y + boxHeight / 2);
+
+                    ctx.restore();
+                });
+            });
+        }
+    };
+
+    function renderFlowChart(canvasId, labels, values) {
+        const ctx = document.getElementById(canvasId);
+        if (!ctx || typeof Chart === 'undefined' || ctx.dataset.rendered === 'true') return;
+        ctx.dataset.rendered = 'true';
+
+        const isMobile = window.innerWidth <= 640;
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Net Flow (₹ Cr)',
+                    data: values,
+                    borderColor: '#1a1a1a',
+                    borderWidth: 1.2,
+                    borderDash: [4, 4],
+                    pointBackgroundColor: values.map(v => v >= 0 ? '#15803d' : '#b91c1c'),
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 1.2,
+                    pointRadius: isMobile ? 3.5 : 5.5,
+                    pointHoverRadius: 6,
+                    tension: 0.15,
+                    fill: false
+                }]
+            },
+            plugins: [linePriceLabelPlugin],
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                layout: {
+                    padding: {
+                        top: isMobile ? 35 : 50,
+                        bottom: isMobile ? 20 : 35,
+                        left: isMobile ? 2 : 10,
+                        right: isMobile ? 2 : 10
+                    }
                 },
-                plugins: [linePriceLabelPlugin],
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    layout: {
-                        padding: {
-                            top: isMobile ? 35 : 50,
-                            bottom: isMobile ? 20 : 35,
-                            left: isMobile ? 2 : 10,
-                            right: isMobile ? 2 : 10
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: (item) => (item.raw >= 0 ? '+₹' : '-₹') + Math.abs(item.raw) + ' Cr'
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { 
+                            color: '#4a4a4a', 
+                            font: { size: isMobile ? 8.5 : 11, weight: 600 },
+                            maxRotation: isMobile ? 45 : 0,
+                            autoSkip: true,
+                            maxTicksLimit: isMobile ? 8 : 15
                         }
                     },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: (item) => (item.raw >= 0 ? '+₹' : '-₹') + Math.abs(item.raw) + ' Cr'
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            grid: { display: false },
-                            ticks: { 
-                                color: '#4a4a4a', 
-                                font: { size: isMobile ? 8.5 : 11, weight: 600 },
-                                maxRotation: isMobile ? 45 : 0,
-                                autoSkip: true,
-                                maxTicksLimit: isMobile ? 8 : 15
-                            }
-                        },
-                        y: {
-                            grid: { color: 'rgba(210,210,210,0.3)' },
-                            ticks: {
-                                color: '#4a4a4a',
-                                font: { size: isMobile ? 8.5 : 11 },
-                                callback: (v) => (isMobile ? v : '₹' + v + ' Cr')
-                            }
+                    y: {
+                        grid: { color: 'rgba(210,210,210,0.3)' },
+                        ticks: {
+                            color: '#4a4a4a',
+                            font: { size: isMobile ? 8.5 : 11 },
+                            callback: (v) => (isMobile ? v : '₹' + v + ' Cr')
                         }
                     }
                 }
-            });
-        }
+            }
+        });
+    }
 
-        function initFlowCharts(graphData) {
-            if (!graphData) return;
-            renderFlowChart('fiiFlowChart', graphData.dates, graphData.fii);
-            renderFlowChart('diiFlowChart', graphData.dates, graphData.dii);
-        }
+    function initFlowCharts(graphData) {
+        if (!graphData) return;
+        renderFlowChart('fiiFlowChart', graphData.dates, graphData.fii);
+        renderFlowChart('diiFlowChart', graphData.dates, graphData.dii);
+    }
 
-        window.addEventListener('DOMContentLoaded', fetchDailyData);
-    </script>
+    // Initialize initial route & fetch EOD market data
+    window.addEventListener('DOMContentLoaded', async () => {
+        handleInitialRouting();
+        await fetchDailyData();
+    });
+</script>
+    
 </body>
 </html>
