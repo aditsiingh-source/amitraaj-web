@@ -50,7 +50,7 @@ main { position: relative; z-index: 1; padding: 0 16px; }
   margin: 0;
   font-family: var(--helv);
   font-weight: 700;
-  font-size: clamp(40px, 7.2vw, 80px);
+  font-size: clamp(60px, 7.2vw, 100px);
   line-height: 1.02;
   letter-spacing: -2px;
   text-wrap: balance;
