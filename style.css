@@ -37,6 +37,35 @@ img, svg { display: block; }
 
 main { position: relative; z-index: 1; padding: 0 16px; }
 
+/* ── Site Header / Logo Banner ── */
+/* ── Site Header / Logo Banner ── */
+.site-header {
+  width: 100%;
+  background-color: #a1a1a1; /* This exactly matches your social pills */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 0;
+  /* Optional: adds a subtle shadow under the banner */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+}
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-logo {
+  /* Adjust this height to make the logo larger or smaller */
+  height: 60px; 
+  width: auto;
+  display: block;
+}
+
+/* Add a slight top margin to the hero section so it doesn't touch the new banner */
+.hero {
+  padding-top: clamp(40px, 8vh, 100px); 
+}
 /* ── Hero ── */
 .hero {
   max-width: 880px;
