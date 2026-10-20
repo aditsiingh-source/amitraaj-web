@@ -207,7 +207,7 @@ main { position: relative; z-index: 1; padding: 0 16px; }
 
 .mac-body {
   display: flex;
-  min-height: 380px;
+  min-height: 240px;
 }
 
 .mac-sidebar {
@@ -259,16 +259,17 @@ main { position: relative; z-index: 1; padding: 0 16px; }
 .mac-tag.red { background: #ff5f57; }
 .mac-tag.orange { background: #febc2e; }
 
+
 .mac-main {
   flex: 1;
-  padding: 24px;
+  padding: 32px 24px;
   background: #ffffff;
 }
 
 .mac-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  gap: 24px 16px;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 24px 20px;
 }
 
 .mac-file {
