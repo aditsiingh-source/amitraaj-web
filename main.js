@@ -1,5 +1,33 @@
 document.documentElement.classList.add('js');
 
+/* ── Framework modal ── */
+const modal = document.getElementById('framework-modal');
+const modalTitle = document.getElementById('dynamic-modal-title');
+const modalDesc = document.getElementById('dynamic-modal-desc');
+
+function showModalStep(step) {
+  modal.querySelectorAll('.modal__step').forEach((el) => {
+    el.hidden = el.dataset.step !== step;
+  });
+}
+
+// Attach event listeners to the new MacOS file buttons
+document.querySelectorAll('.mac-file').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    // Inject the specific file's details into the modal
+    modalTitle.textContent = btn.dataset.fileTitle || "Download File";
+    modalDesc.textContent = btn.dataset.fileDesc || "Access this private trading resource.";
+    
+    showModalStep('form');
+    modal.showModal();
+  });
+});
+
+modal.querySelector('[data-close-modal]').addEventListener('click', () => modal.close());
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) modal.close(); // click on backdrop
+});
+
 /* ── Scroll reveal (staggered) ── */
 (() => {
   const els = document.querySelectorAll('.reveal, .reveal-scale');
@@ -73,7 +101,6 @@ document.documentElement.classList.add('js');
 
   if (reduced || !matchMedia('(hover: hover)').matches) return;
 
-  // Letters near the cursor rise and swell, like the macOS dock.
   title.addEventListener('pointermove', (e) => {
     letters.forEach((ch) => {
       const r = ch.getBoundingClientRect();
@@ -88,7 +115,7 @@ document.documentElement.classList.add('js');
   title.addEventListener('pointerleave', () => {
     letters.forEach((ch) => { ch.style.removeProperty('--lift'); ch.style.removeProperty('--grow'); });
   });
-  // Each letter gives a little springy "click" as the cursor crosses it.
+  
   letters.forEach((ch) => {
     ch.addEventListener('pointerenter', () => {
       ch.classList.remove('is-pop');
@@ -114,82 +141,4 @@ document.querySelectorAll('.tilt').forEach((card) => {
     card.style.removeProperty('--rx');
     card.style.removeProperty('--ry');
   });
-});
-
-/* ── Subscribe ── */
-async function subscribe(form) {
-  const data = new FormData(form);
-  // Add a hidden source tag so your sheet knows which form they used
-  data.append('source', form.getAttribute('name'));
-
-  // PASTE YOUR GOOGLE SCRIPT URL HERE
-  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwG-nGPk7pEl1GdRwrhx3872bdazSmIXBjkYAdbRYhfVb74--fT9WGjLlARemiccUGJ/exec';
-
-  // Send the data directly to Google Sheets
-  const res = await fetch(GOOGLE_SCRIPT_URL, {
-    method: 'POST',
-    body: data
-  });
-  
-  if (!res.ok) throw new Error(`Subscribe failed`);
-}
-
-document.querySelectorAll('form.signup').forEach((form) => {
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (form.company?.value) return; // honeypot
-
-    const btn = form.querySelector('button[type="submit"]');
-    const status = form.querySelector('.form-status');
-    const isModal = form.classList.contains('signup--modal');
-    btn.disabled = true;
-    status.className = 'form-status';
-    status.textContent = 'Joining…';
-
-    try {
-      await subscribe(form);
-      if (isModal) {
-        showModalStep('done');
-      } else {
-        status.classList.add('is-ok');
-        status.textContent = "You're in. See you Sunday.";
-        form.reset();
-      }
-    } catch (err) {
-      console.error(err);
-      if (isModal) {
-        // Never block the download on a newsletter hiccup.
-        showModalStep('done');
-      } else {
-        status.classList.add('is-err');
-        status.textContent = 'Something went wrong. Please try again.';
-      }
-    } finally {
-      btn.disabled = false;
-      if (isModal) status.textContent = '';
-    }
-  });
-});
-
-/* ── Framework modal ── */
-const modal = document.getElementById('framework-modal');
-
-function showModalStep(step) {
-  modal.querySelectorAll('.modal__step').forEach((el) => {
-    el.hidden = el.dataset.step !== step;
-  });
-}
-
-document.querySelectorAll('[data-open-modal]').forEach((btn) => {
-  btn.addEventListener('click', () => {
-    showModalStep('form');
-    modal.showModal();
-    // Prefill with any email already typed on the page.
-    const typed = [...document.querySelectorAll('.input')].find((i) => i.value && i.id !== 'email-modal');
-    if (typed) modal.querySelector('#email-modal').value = typed.value;
-  });
-});
-modal.querySelector('[data-close-modal]').addEventListener('click', () => modal.close());
-modal.addEventListener('click', (e) => {
-  if (e.target === modal) modal.close(); // click on backdrop
 });
