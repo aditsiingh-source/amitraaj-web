@@ -1,46 +1,18 @@
 document.documentElement.classList.add('js');
 
-/* ── Archive Email Redirect ── */
-const archiveForm = document.getElementById('archive-signup-form');
-if (archiveForm) {
-  archiveForm.addEventListener('submit', function(e) {
-    e.preventDefault(); // Prevents the default page reload
+/* ── Homepage Email Signup (No Redirect) ── */
+const signupForm = document.getElementById('homepage-signup-form');
+if (signupForm) {
+  signupForm.addEventListener('submit', function(e) {
+    e.preventDefault(); // Prevents the page reload or redirection
     
-    // Redirect the user to the archive page
-    window.location.href = 'https://amitraaj.in/archive';
-  });
-}
-
-/* ── Framework modal (Safeguarded) ── */
-const modal = document.getElementById('framework-modal');
-if (modal) {
-  const modalTitle = document.getElementById('dynamic-modal-title');
-  const modalDesc = document.getElementById('dynamic-modal-desc');
-
-  function showModalStep(step) {
-    modal.querySelectorAll('.modal__step').forEach((el) => {
-      el.hidden = el.dataset.step !== step;
-    });
-  }
-
-  // Attach event listeners to the MacOS file buttons (if they exist)
-  document.querySelectorAll('.mac-file').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      if(modalTitle) modalTitle.textContent = btn.dataset.fileTitle || "Download File";
-      if(modalDesc) modalDesc.textContent = btn.dataset.fileDesc || "Access this private trading resource.";
-      
-      showModalStep('form');
-      modal.showModal();
-    });
-  });
-
-  const closeModalBtn = modal.querySelector('[data-close-modal]');
-  if (closeModalBtn) {
-    closeModalBtn.addEventListener('click', () => modal.close());
-  }
-
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) modal.close(); // click on backdrop
+    // Select the button to give visual feedback to the user
+    const btn = document.getElementById('signup-submit-btn');
+    btn.textContent = 'Success! Welcome to the club.';
+    btn.style.background = '#28c840'; // Turns the button green
+    
+    // Optional: Clears the email input field after they click submit
+    document.querySelector('.mac-input').value = '';
   });
 }
 
@@ -158,3 +130,4 @@ document.querySelectorAll('.tilt').forEach((card) => {
     card.style.removeProperty('--ry');
   });
 });
+```<FollowUp></FollowUp>
