@@ -1,4 +1,3 @@
-
 /* ── Tokens ── */
 :root {
   --bg: #ffffff;
@@ -98,109 +97,91 @@ main { position: relative; z-index: 1; padding: 0 16px; }
 .sub:hover { filter: drop-shadow(0 1px 0 #fff) drop-shadow(0 3px 2px rgba(0,0,0,.12)) drop-shadow(0 12px 26px rgba(0,0,0,.16)); letter-spacing: .01em; }
 @keyframes sweep { 0% { background-position: 100% 0; } 60%, 100% { background-position: 0% 0; } }
 
-/* ── Signup form ── */
-/* Container to stack the button and the text vertically */
-.whatsapp-promo-container {
+/* ── Premium Hero CTA ── */
+.hero-cta-wrapper {
+  margin-top: 40px;
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px; /* Space between the pill button and the text */
-  margin-top: 20px;
+  justify-content: center;
 }
 
-/* The pill-shaped button styling */
-.pill-button {
-  display: inline-flex;
+.premium-cta {
+  display: flex;
+  align-items: center;
+  background: var(--card);
+  padding: 12px 20px 12px 14px;
+  border-radius: 100px; /* Gives that smooth Apple squircle feel */
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.12), 0 2px 6px -2px rgba(0, 0, 0, 0.04);
+  text-decoration: none;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.2s;
+  gap: 16px;
+  max-width: 480px;
+}
+
+.premium-cta:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 16px 32px -12px rgba(0, 0, 0, 0.18), 0 4px 10px -4px rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+.premium-cta__icon {
+  display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f2f2f2; /* Light gray background to match the X button */
-  color: #111111; /* Dark text */
-  text-decoration: none;
-  padding: 8px 20px;
-  border-radius: 50px; /* Creates the pill shape */
+  width: 44px;
+  height: 44px;
+  background: #f4fdf7; /* Very subtle green tint background for the icon */
+  border-radius: 50%;
+  border: 1px solid #dcf6e5;
+}
+
+.premium-cta__icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.premium-cta__text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.premium-cta__title {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 16px;
-  font-weight: 500;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
 }
 
-/* Hover effect to make it interactive */
-.pill-button:hover {
-  background-color: #e5e5e5;
-  transform: scale(1.02);
-}
-
-/* Styling for the monochrome WhatsApp SVG logo */
-.whatsapp-icon {
-  width: 22px;
-  height: 22px;
-  margin-right: 8px;
-  fill: #25D366; /* Changed to official WhatsApp Green */
-}
-
-/* Styling for the text below the button */
-.join-free-text {
+.premium-cta__subtitle {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 13px;
-  color: #555555;
-  margin: 0;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.signup {
-  margin-top: 36px;
-  width: 100%;
-  max-width: 420px;
-  display: flex; flex-direction: column; align-items: center; gap: 12px;
-}
-.input {
-  width: 100%;
-  height: 52px;
-  padding: 0 18px;
-  font: 16px var(--helv);
-  color: var(--ink);
-  text-align: center;
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  outline: none;
-  transition: border-color .3s var(--ease), box-shadow .3s var(--ease);
-}
-.input::placeholder { color: var(--dim); }
-.input:hover { border-color: #d4d4ce; }
-.input:focus { border-color: var(--ink); box-shadow: 0 0 0 4px rgba(17,17,17,.06); }
-
-.btn {
-  display: inline-flex; align-items: center; justify-content: center;
-  height: 50px;
-  padding: 0 34px;
-  font-family: var(--helv);
-  font-weight: 700;
-  font-size: 15px;
-  letter-spacing: .04em;
-  text-transform: uppercase;
-  text-decoration: none;
-  color: #fff;
-  background: var(--ink);
-  border: 0;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: transform .35s var(--ease), box-shadow .35s var(--ease), background .2s;
-}
-.btn:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 10px 24px -8px rgba(0,0,0,.35); }
-.btn:active { transform: scale(.97); box-shadow: none; transition-duration: .1s; }
-.btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-.btn[disabled] { opacity: .6; pointer-events: none; }
-
-.form-status {
-  margin: 0;
-  min-height: 1.2em;
-  font: 13px/1.4 var(--mono);
+  font-weight: 500;
   color: var(--muted);
+  margin-top: 2px;
 }
-.form-status.is-ok { color: #15803d; }
-.form-status.is-err { color: #b91c1c; }
+
+.premium-cta__arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--dim);
+  margin-left: 8px;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.premium-cta__arrow svg {
+  width: 20px;
+  height: 20px;
+}
+
+.premium-cta:hover .premium-cta__arrow {
+  transform: translateX(4px);
+  color: var(--ink);
+}
 
 /* ── Social pills ── */
 .socials {
@@ -259,71 +240,6 @@ main { position: relative; z-index: 1; padding: 0 16px; }
 }
 @keyframes ping { 0% { transform: scale(1); opacity: .6; } 100% { transform: scale(3); opacity: 0; } }
 
-/* ── Download card ── */
-.download-wrap {
-  margin-top: 64px;
-  width: 100%;
-  max-width: 480px;
-  display: flex; flex-direction: column; align-items: center;
-}
-.section-heading {
-  margin: 0 0 20px;
-  font-weight: 700;
-  font-size: clamp(28px, 3.6vw, 38px);
-  letter-spacing: -1.5px;
-}
-.vault-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  width: 100%;
-}
-.download-aura { position: relative; width: 100%; }
-.download-aura::before {
-  content: "";
-  position: absolute; inset: -12px;
-  z-index: -1;
-  border-radius: 32px;
-  background: linear-gradient(135deg, #b8d4ff, #dbe9ff 50%, #a8cbff);
-  filter: blur(26px);
-  animation: breathe 6s ease-in-out infinite alternate;
-  pointer-events: none;
-}
-.download-aura:hover::before { animation-play-state: paused; opacity: 1; transform: scale(1.06); }
-@keyframes breathe { from { opacity: .55; transform: scale(.98); } to { opacity: .9; transform: scale(1.04); } }
-.download {
-  position: relative;
-  width: 100%;
-  max-width: 480px;
-  padding: 28px 28px 24px;
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
-  font-family: var(--helv);
-  color: var(--ink);
-  text-align: center;
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  cursor: pointer;
-  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(var(--ty, 0));
-  transition: transform .5s var(--ease), box-shadow .5s var(--ease), border-color .3s;
-  will-change: transform;
-}
-.download:hover { --ty: -4px; border-color: #d9d9d3; box-shadow: 0 24px 50px -24px rgba(0,0,0,.28); }
-.download:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
-.download__label {
-  display: inline-flex; align-items: center; gap: 7px;
-  font: 11px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
-}
-.download__label svg { width: 15px; height: 15px; }
-.download__title { margin-top: 4px; font-weight: 700; font-size: 20px; letter-spacing: -.5px; }
-.download__desc { max-width: 340px; font-size: 15px; line-height: 1.5; color: var(--muted); }
-.download__cta {
-  margin-top: 8px;
-  display: inline-flex; align-items: center; gap: 6px;
-  font-weight: 700; font-size: 15px;
-}
-.download__cta .arrow { display: inline-block; transition: transform .4s var(--ease); }
-.download:hover .arrow { transform: translateX(5px); }
 
 /* ── Founders Note ── */
 .note-section {
@@ -368,8 +284,6 @@ main { position: relative; z-index: 1; padding: 0 16px; }
 }
 .paper p { margin: 0 0 var(--lh); }
 
-.note-section .signup { margin-top: 64px; }
-
 /* ── Footer ── */
 .footer {
   position: relative; z-index: 1;
@@ -382,42 +296,16 @@ main { position: relative; z-index: 1; padding: 0 16px; }
 .footer__icons svg { width: 20px; height: 20px; }
 .footer__copy { margin: 0; font: 12px var(--mono); letter-spacing: .08em; color: var(--dim); }
 
-/* ── Modal ── */
-.modal {
-  width: min(420px, calc(100% - 32px));
-  padding: 40px 28px 28px;
-  color: var(--ink);
+/* Financial Disclaimer */
+.footer__disclaimer {
+  max-width: 700px;
+  margin: 10px auto 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--dim);
   text-align: center;
-  background: var(--card);
-  border: 0;
-  border-radius: 22px;
-  box-shadow: 0 40px 100px -20px rgba(0,0,0,.35);
+  padding: 0 20px;
 }
-.modal::backdrop { background: rgba(250,250,248,.6); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-.modal[open] { animation: pop .45s var(--ease); }
-.modal[open]::backdrop { animation: fade .3s ease; }
-@keyframes pop { from { opacity: 0; transform: translateY(16px) scale(.96); } }
-@keyframes fade { from { opacity: 0; } }
-.modal__close {
-  position: absolute; top: 14px; right: 14px;
-  width: 32px; height: 32px;
-  font-size: 14px; color: var(--muted);
-  background: var(--pill); border: 0; border-radius: 50%;
-  cursor: pointer;
-  transition: transform .3s var(--ease), color .2s;
-}
-.modal__close:hover { color: var(--ink); transform: rotate(90deg); }
-.modal__title { margin: 0; font-weight: 700; font-size: 28px; letter-spacing: -1px; }
-.modal__text { margin: 10px auto 0; max-width: 320px; font-size: 15px; line-height: 1.5; color: var(--muted); }
-.signup--modal { margin: 24px auto 0; }
-.check {
-  margin: 0 auto 16px;
-  width: 52px; height: 52px; border-radius: 50%;
-  display: grid; place-items: center;
-  font-size: 24px; color: #fff; background: var(--green);
-  animation: pop .5s var(--ease);
-}
-.btn--download { margin-top: 24px; }
 
 /* ── Scroll reveal ── */
 .js .reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s var(--ease), transform .9s var(--ease); }
