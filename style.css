@@ -38,26 +38,24 @@ img, svg { display: block; }
 main { position: relative; z-index: 1; padding: 0 16px; }
 
 /* ── Site Header / Logo Banner ── */
-/* ── Site Header / Logo Banner ── */
+
 .site-header {
   width: 100%;
-  background-color: #a1a1a1; /* This exactly matches your social pills */
+  background-color: var(--pill); /* Matches the Insta/YT pill color perfectly */
   display: flex;
-  justify-content: center;
+  justify-content: flex-start; /* Pushes the logo to the left side */
   align-items: center;
-  padding: 16px 0;
-  /* Optional: adds a subtle shadow under the banner */
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+  padding: 12px 24px; /* Adds breathing room around the logo, keeping it off the exact edge */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Softer, subtle shadow */
 }
+
 .logo-container {
   display: flex;
-  justify-content: center;
   align-items: center;
 }
 
 .main-logo {
-  /* Adjust this height to make the logo larger or smaller */
-  height: 60px; 
+  height: 45px; /* Shrunk down to a clean, minimal size */
   width: auto;
   display: block;
 }
@@ -70,7 +68,8 @@ main { position: relative; z-index: 1; padding: 0 16px; }
 .hero {
   max-width: 880px;
   margin: 0 auto;
-  padding: clamp(72px, 12vh, 140px) 0 40px;
+  /* Reduced top padding significantly to pull the title closer to the logo banner */
+  padding: clamp(24px, 5vh, 48px) 0 40px; 
   display: flex; flex-direction: column; align-items: center;
 }
 
