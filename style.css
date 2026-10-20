@@ -99,6 +99,55 @@ main { position: relative; z-index: 1; padding: 0 16px; }
 @keyframes sweep { 0% { background-position: 100% 0; } 60%, 100% { background-position: 0% 0; } }
 
 /* ── Signup form ── */
+/* Container to stack the button and the text vertically */
+.whatsapp-promo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px; /* Space between the pill button and the text */
+  margin-top: 20px;
+}
+
+/* The pill-shaped button styling */
+.pill-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f2f2f2; /* Light gray background to match the X button */
+  color: #111111; /* Dark text */
+  text-decoration: none;
+  padding: 8px 20px;
+  border-radius: 50px; /* Creates the pill shape */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+/* Hover effect to make it interactive */
+.pill-button:hover {
+  background-color: #e5e5e5;
+  transform: scale(1.02);
+}
+
+/* Styling for the monochrome WhatsApp SVG logo */
+.whatsapp-icon {
+  width: 22px;
+  height: 22px;
+  margin-right: 8px;
+  fill: #25D366; /* Changed to official WhatsApp Green */
+}
+
+/* Styling for the text below the button */
+.join-free-text {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+  color: #555555;
+  margin: 0;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
 .signup {
   margin-top: 36px;
   width: 100%;
