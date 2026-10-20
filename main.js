@@ -1,32 +1,48 @@
 document.documentElement.classList.add('js');
 
-/* ── Framework modal ── */
-const modal = document.getElementById('framework-modal');
-const modalTitle = document.getElementById('dynamic-modal-title');
-const modalDesc = document.getElementById('dynamic-modal-desc');
-
-function showModalStep(step) {
-  modal.querySelectorAll('.modal__step').forEach((el) => {
-    el.hidden = el.dataset.step !== step;
+/* ── Archive Email Redirect ── */
+const archiveForm = document.getElementById('archive-signup-form');
+if (archiveForm) {
+  archiveForm.addEventListener('submit', function(e) {
+    e.preventDefault(); // Prevents the default page reload
+    
+    // Redirect the user to the archive page
+    window.location.href = 'https://amitraaj.in/archive';
   });
 }
 
-// Attach event listeners to the new MacOS file buttons
-document.querySelectorAll('.mac-file').forEach((btn) => {
-  btn.addEventListener('click', () => {
-    // Inject the specific file's details into the modal
-    modalTitle.textContent = btn.dataset.fileTitle || "Download File";
-    modalDesc.textContent = btn.dataset.fileDesc || "Access this private trading resource.";
-    
-    showModalStep('form');
-    modal.showModal();
-  });
-});
+/* ── Framework modal (Safeguarded) ── */
+const modal = document.getElementById('framework-modal');
+if (modal) {
+  const modalTitle = document.getElementById('dynamic-modal-title');
+  const modalDesc = document.getElementById('dynamic-modal-desc');
 
-modal.querySelector('[data-close-modal]').addEventListener('click', () => modal.close());
-modal.addEventListener('click', (e) => {
-  if (e.target === modal) modal.close(); // click on backdrop
-});
+  function showModalStep(step) {
+    modal.querySelectorAll('.modal__step').forEach((el) => {
+      el.hidden = el.dataset.step !== step;
+    });
+  }
+
+  // Attach event listeners to the MacOS file buttons (if they exist)
+  document.querySelectorAll('.mac-file').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if(modalTitle) modalTitle.textContent = btn.dataset.fileTitle || "Download File";
+      if(modalDesc) modalDesc.textContent = btn.dataset.fileDesc || "Access this private trading resource.";
+      
+      showModalStep('form');
+      modal.showModal();
+    });
+  });
+
+  const closeModalBtn = modal.querySelector('[data-close-modal]');
+  if (closeModalBtn) {
+    closeModalBtn.addEventListener('click', () => modal.close());
+  }
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.close(); // click on backdrop
+  });
+}
 
 /* ── Scroll reveal (staggered) ── */
 (() => {

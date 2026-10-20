@@ -19,21 +19,23 @@
 </head>
 <body>
 
-  <!-- New Header / Logo Banner -->
+<!-- New Header / Logo Banner -->
   <header class="site-header">
     <div class="logo-container">
       <img src="amitraaj-logo.png" alt="Amitraaj Logo" class="main-logo" />
     </div>
+    <!-- New Header Button -->
+    <a href="#archive-window" class="header-btn">Get Archive</a>
   </header>
 
-  <main>
+<main>
     <!-- ── Hero ── -->
     <section class="hero">
       <h1 class="title title--hero" id="hero-title"> The Trading Archive <br class="br-desktop" />Built for Everyone</h1>
       <p class="sub reveal">For Traders, By Traders<br class="br-desktop" /></p>
 
-      <!-- MacOS Finder Archive UI (No Sidebar, Direct Full Grid) -->
-      <div class="mac-window reveal" style="margin-top: 36px;">
+      <!-- MacOS Finder Archive UI -->
+      <div id="archive-window" class="mac-window reveal" style="margin-top: 36px;">
         <div class="mac-titlebar">
           <div class="mac-dots"><i></i><i></i><i></i></div>
           <div class="mac-title">
@@ -43,32 +45,12 @@
         </div>
         <div class="mac-body">
           <div class="mac-main">
-            <div class="mac-grid">
-              
-              <!-- PDF File Item 1 -->
-              <button class="mac-file" data-file-title="The Edge Discovery Protocol" data-file-desc="The step-by-step research process I use to identify structural inefficiencies and locate high-probability market setups.">
-                <div class="mac-file-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><text x="6" y="16" font-family="sans-serif" font-size="6" font-weight="bold" fill="#3b82f6" stroke="none">PDF</text></svg>
-                </div>
-                <span class="mac-file-name">Edge_Discovery.pdf</span>
-              </button>
-
-              <!-- PDF File Item 2 -->
-              <button class="mac-file" data-file-title="The Edge Validation Matrix" data-file-desc="Use this strict checklist to stress-test your setups and separate real alpha from market noise before risking capital.">
-                <div class="mac-file-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><text x="6" y="16" font-family="sans-serif" font-size="6" font-weight="bold" fill="#3b82f6" stroke="none">PDF</text></svg>
-                </div>
-                <span class="mac-file-name">Validation_Matrix.pdf</span>
-              </button>
-
-              <!-- PDF File Item 3 -->
-              <button class="mac-file" data-file-title="Dynamic Sizing Engine" data-file-desc="The exact mathematical framework for position sizing. Know exactly how much to bet per trade to maximize growth.">
-                <div class="mac-file-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><text x="6" y="16" font-family="sans-serif" font-size="6" font-weight="bold" fill="#3b82f6" stroke="none">PDF</text></svg>
-                </div>
-                <span class="mac-file-name">Dynamic_Sizing.pdf</span>
-              </button>
-
+            <!-- New Signup Section replacing the PDF grid -->
+            <div class="mac-signup-container">
+              <form class="mac-signup-form" id="archive-signup-form">
+                <input type="email" class="mac-input" placeholder="Enter your email" required />
+                <button type="submit" class="mac-btn">Get access to archive</button>
+              </form>
             </div>
           </div>
         </div>
