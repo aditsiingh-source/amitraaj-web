@@ -55,7 +55,7 @@ main { position: relative; z-index: 1; padding: 0 16px; }
 }
 
 .main-logo {
-  height: 45px; /* Shrunk down to a clean, minimal size */
+  height: 40px; /* Shrunk down to a clean, minimal size */
   width: auto;
   display: block;
 }
