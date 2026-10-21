@@ -1,6 +1,6 @@
 document.documentElement.classList.add('js');
 
-/* ── Homepage Email Signup (With App Script Fetch) ── */
+/* ── Homepage Email Signup (Optimized UI Speed) ── */
 const signupForm = document.getElementById('homepage-signup-form');
 if (signupForm) {
   signupForm.addEventListener('submit', function(e) {
@@ -12,8 +12,8 @@ if (signupForm) {
 
     // 1. Change button to "Joining..." and turn it dull grey
     btn.textContent = 'Joining...';
-    btn.style.background = '#a1a1a6'; // Dull grey
-    btn.style.pointerEvents = 'none'; // Prevent double-clicking
+    btn.style.background = '#a1a1a6'; 
+    btn.style.pointerEvents = 'none'; 
     
     const formData = new FormData();
     formData.append('email', emailValue);
@@ -21,17 +21,17 @@ if (signupForm) {
     // Replace with your Google Apps Script Web App URL
     const scriptURL = 'https://script.google.com/macros/s/AKfycbyyDh2xEeuAwxxVrMExLh1GHzea8dMdt-9hYtw2KT1NAtiD4Egy-b6E3f6FUp_HDIGc4g/exec';
 
-    // Wait at least 1 second for the animation
-    Promise.all([
-      fetch(scriptURL, { method: 'POST', body: formData }).catch(error => console.error('Error!', error.message)),
-      new Promise(resolve => setTimeout(resolve, 1000)) 
-    ]).then(() => {
-      // 2. Success state
+    // 2. Fire the request in the background (no-cors mode skips slow preflight checks)
+    fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' })
+      .catch(error => console.error('Error in background fetch:', error.message));
+
+    // 3. Force the UI to show success after exactly 1.2 seconds
+    setTimeout(() => {
       btn.textContent = 'Success! Welcome to the club.';
-      btn.style.background = '#28c840'; // Green
+      btn.style.background = '#28c840'; 
       input.value = '';
       
-      // 3. Dynamically add the "Check your mail" note below the button
+      // 4. Inject the check inbox note
       let inboxNote = document.getElementById('check-mail-note');
       if (!inboxNote) {
         inboxNote = document.createElement('p');
@@ -40,18 +40,19 @@ if (signupForm) {
         inboxNote.style.color = 'var(--muted)';
         inboxNote.style.margin = '4px 0 0 0';
         inboxNote.style.textAlign = 'center';
-        inboxNote.style.animation = 'pop-letter 0.5s ease forwards'; // Uses your existing animation
+        inboxNote.style.animation = 'pop-letter 0.5s ease forwards';
         signupForm.appendChild(inboxNote);
       }
       inboxNote.textContent = 'Check your mail inbox for the link!';
 
-      // Optional: Reset the button back to original state after 5 seconds
+      // 5. Reset button after 5 seconds
       setTimeout(() => {
         btn.textContent = 'Get Access';
         btn.style.background = '#007aff';
         btn.style.pointerEvents = 'auto';
       }, 5000);
-    });
+      
+    }, 1200); // 1.2 second wait time for the perfect visual delay
   });
 }
 /* ── Scroll reveal (staggered) ── */
