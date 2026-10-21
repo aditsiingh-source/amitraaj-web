@@ -76,9 +76,10 @@ main { position: relative; z-index: 1; padding: 0 16px; }
   transition: background-color 0.2s var(--ease), transform 0.2s var(--ease);
 }
 
-.header-btn:hover {
-  background-color: #4a4a48; /* Darkens slightly when hovered over */
-  transform: translateY(-1px);
+.header-btn:active {
+  background-color: #d1d1d6; /* Dull grey */
+  transform: translateY(1px); /* Little press down effect */
+  transition: background-color 0.1s, transform 0.1s; /* Quick snap */
 }
 /* ── Hero ── */
 .hero {

@@ -1,17 +1,59 @@
 document.documentElement.classList.add('js');
 
-/* ── Homepage Email Signup (No Redirect) ── */
+/* ── Homepage Email Signup (With App Script Fetch) ── */
 const signupForm = document.getElementById('homepage-signup-form');
 if (signupForm) {
   signupForm.addEventListener('submit', function(e) {
     e.preventDefault(); 
+    
     const btn = document.getElementById('signup-submit-btn');
-    btn.textContent = 'Success! Welcome to the club.';
-    btn.style.background = '#28c840'; 
-    document.querySelector('.mac-input').value = '';
+    const input = document.querySelector('.mac-input');
+    const emailValue = input.value;
+
+    // 1. Change button to "Joining..." and turn it dull grey
+    btn.textContent = 'Joining...';
+    btn.style.background = '#a1a1a6'; // Dull grey
+    btn.style.pointerEvents = 'none'; // Prevent double-clicking
+    
+    const formData = new FormData();
+    formData.append('email', emailValue);
+
+    // Replace with your Google Apps Script Web App URL
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyyDh2xEeuAwxxVrMExLh1GHzea8dMdt-9hYtw2KT1NAtiD4Egy-b6E3f6FUp_HDIGc4g/exec';
+
+    // Wait at least 1 second for the animation
+    Promise.all([
+      fetch(scriptURL, { method: 'POST', body: formData }).catch(error => console.error('Error!', error.message)),
+      new Promise(resolve => setTimeout(resolve, 1000)) 
+    ]).then(() => {
+      // 2. Success state
+      btn.textContent = 'Success! Welcome to the club.';
+      btn.style.background = '#28c840'; // Green
+      input.value = '';
+      
+      // 3. Dynamically add the "Check your mail" note below the button
+      let inboxNote = document.getElementById('check-mail-note');
+      if (!inboxNote) {
+        inboxNote = document.createElement('p');
+        inboxNote.id = 'check-mail-note';
+        inboxNote.style.fontSize = '12px';
+        inboxNote.style.color = 'var(--muted)';
+        inboxNote.style.margin = '4px 0 0 0';
+        inboxNote.style.textAlign = 'center';
+        inboxNote.style.animation = 'pop-letter 0.5s ease forwards'; // Uses your existing animation
+        signupForm.appendChild(inboxNote);
+      }
+      inboxNote.textContent = 'Check your mail inbox for the link!';
+
+      // Optional: Reset the button back to original state after 5 seconds
+      setTimeout(() => {
+        btn.textContent = 'Get Access';
+        btn.style.background = '#007aff';
+        btn.style.pointerEvents = 'auto';
+      }, 5000);
+    });
   });
 }
-
 /* ── Scroll reveal (staggered) ── */
 (() => {
   const els = document.querySelectorAll('.reveal, .reveal-scale');
