@@ -40,7 +40,7 @@ main { position: relative; z-index: 1; padding: 0 16px; }
 /* ── Site Header / Logo Banner ── */
 .site-header {
   width: 100%;
-  background-color: #e1e1e6; 
+  background-color: #d1d1d6; 
   display: flex;
   justify-content: space-between; 
   align-items: center;
