@@ -4,14 +4,10 @@ document.documentElement.classList.add('js');
 const signupForm = document.getElementById('homepage-signup-form');
 if (signupForm) {
   signupForm.addEventListener('submit', function(e) {
-    e.preventDefault(); // Prevents the page reload or redirection
-    
-    // Select the button to give visual feedback to the user
+    e.preventDefault(); 
     const btn = document.getElementById('signup-submit-btn');
     btn.textContent = 'Success! Welcome to the club.';
-    btn.style.background = '#28c840'; // Turns the button green
-    
-    // Optional: Clears the email input field after they click submit
+    btn.style.background = '#28c840'; 
     document.querySelector('.mac-input').value = '';
   });
 }
@@ -34,7 +30,6 @@ if (signupForm) {
   }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
   els.forEach((el) => io.observe(el));
 
-  // Drop the stagger delay once revealed so hover effects respond instantly.
   document.addEventListener('transitionend', (e) => {
     if (e.target.classList?.contains('is-in')) e.target.style.transitionDelay = '';
   });
@@ -130,4 +125,3 @@ document.querySelectorAll('.tilt').forEach((card) => {
     card.style.removeProperty('--ry');
   });
 });
-```<FollowUp></FollowUp>
