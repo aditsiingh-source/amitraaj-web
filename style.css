@@ -40,7 +40,7 @@ main { position: relative; z-index: 1; padding: 0 16px; }
 /* ── Site Header / Logo Banner ── */
 .site-header {
   width: 100%;
-  background-color: var(--pill); 
+  background-color: #e1e1e6; 
   display: flex;
   justify-content: space-between; 
   align-items: center;
@@ -62,7 +62,7 @@ main { position: relative; z-index: 1; padding: 0 16px; }
 /* ── New Header Button ── */
 .header-btn {
   background-color: #ffffff; /* Matches the bottom social icons */
-  color: #686666;
+  color: #464444;
   text-decoration: none;
   font-family: var(--helv);
   font-size: 11.5px; 
