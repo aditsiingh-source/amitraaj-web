@@ -19,7 +19,7 @@ if (signupForm) {
     formData.append('email', emailValue);
 
     // Replace with your Google Apps Script Web App URL
-    const scriptURL = 'https://script.google.com/macros/library/d/1livHkZt0doVD2afuIPsG9lsIrbL_XA8nzTXZgPj3oOs_qb_Bw7OTMtmB/1';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxAZplNmT44OTnC3tLYuZHZUNYBGUnjQSCaa5b17iMoPzD8Y5nE8vQw2Svgb05om-CeUw/exec';
 
     // 2. Fire the request in the background (no-cors mode skips slow preflight checks)
     fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' })
