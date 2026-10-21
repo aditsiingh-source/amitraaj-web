@@ -1,58 +1,41 @@
 document.documentElement.classList.add('js');
 
-/* ── Homepage Email Signup (Optimized UI Speed) ── */
-const signupForm = document.getElementById('homepage-signup-form');
-if (signupForm) {
-  signupForm.addEventListener('submit', function(e) {
-    e.preventDefault(); 
+/* ── Archive Access Flow ── */
+const accessBtn = document.getElementById('archive-access-btn');
+const modal = document.getElementById('welcome-modal');
+const closeBtn = document.getElementById('modal-close-btn');
+
+if (accessBtn && modal) {
+  accessBtn.addEventListener('click', () => {
+    // 1. Loading state
+    const originalText = accessBtn.textContent;
+    accessBtn.textContent = 'Joining...';
+    accessBtn.style.background = '#a1a1a6'; 
+    accessBtn.style.pointerEvents = 'none';
     
-    const btn = document.getElementById('signup-submit-btn');
-    const input = document.querySelector('.mac-input');
-    const emailValue = input.value;
-
-    // 1. Change button to "Joining..." and turn it dull grey
-    btn.textContent = 'Joining...';
-    btn.style.background = '#a1a1a6'; 
-    btn.style.pointerEvents = 'none'; 
-    
-    const formData = new FormData();
-    formData.append('email', emailValue);
-
-    // Replace with your Google Apps Script Web App URL
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyj5vzgIMFpssiJDigXtciIMqRHnDcHbYlIqp9TLDu1YEBJZHut5qLaayGAY8Oc4ohJWA/exec';
-
-    // 2. Fire the request in the background (no-cors mode skips slow preflight checks)
-    fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' })
-      .catch(error => console.error('Error in background fetch:', error.message));
-
-    // 3. Force the UI to show success after exactly 1.2 seconds
+    // 2. Wait 1.2s then open modal
     setTimeout(() => {
-      btn.textContent = 'Success! Welcome to the club.';
-      btn.style.background = '#28c840'; 
-      input.value = '';
+      modal.classList.add('is-active');
       
-      // 4. Inject the check inbox note
-      let inboxNote = document.getElementById('check-mail-note');
-      if (!inboxNote) {
-        inboxNote = document.createElement('p');
-        inboxNote.id = 'check-mail-note';
-        inboxNote.style.fontSize = '12px';
-        inboxNote.style.color = 'var(--muted)';
-        inboxNote.style.margin = '4px 0 0 0';
-        inboxNote.style.textAlign = 'center';
-        inboxNote.style.animation = 'pop-letter 0.5s ease forwards';
-        signupForm.appendChild(inboxNote);
-      }
-      inboxNote.textContent = 'Check your mail inbox for the link!';
-
-      // 5. Reset button after 5 seconds
+      // Reset the button in the background so it's ready when modal closes
       setTimeout(() => {
-        btn.textContent = 'Get Access';
-        btn.style.background = '#007aff';
-        btn.style.pointerEvents = 'auto';
-      }, 5000);
-      
-    }, 1200); // 1.2 second wait time for the perfect visual delay
+        accessBtn.textContent = originalText;
+        accessBtn.style.background = '#007aff';
+        accessBtn.style.pointerEvents = 'auto';
+      }, 500);
+    }, 1200);
+  });
+  
+  // Close modal on 'x' click
+  closeBtn.addEventListener('click', () => {
+    modal.classList.remove('is-active');
+  });
+  
+  // Close modal when clicking the blurred background
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.classList.remove('is-active');
+    }
   });
 }
 /* ── Scroll reveal (staggered) ── */

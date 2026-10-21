@@ -44,12 +44,13 @@
         </div>
         <div class="mac-body">
           <div class="mac-main">
-            <!-- Signup Section -->
-            <div class="mac-signup-container reveal">
-              <form class="mac-signup-form" id="homepage-signup-form">
-                <input type="email" class="mac-input" placeholder="Enter your email" required />
-                <button type="submit" class="mac-btn" id="signup-submit-btn">Get Access</button>
-              </form>
+            <!-- Access Section -->
+            <div class="mac-access-container reveal">
+              <div class="mac-access-content">
+                <h3 class="mac-access-title">Unlock the Vault</h3>
+                <p class="mac-access-sub">Get instant access to our private library of trading frameworks, PDFs, and sources.</p>
+                <button type="button" class="mac-btn access-btn-large" id="archive-access-btn">Access Archive</button>
+              </div>
             </div>
           </div>
         </div>
@@ -122,6 +123,21 @@
         </a>
       </div>
     </section>
+    <!-- Welcome Modal -->
+    <div class="modal-overlay" id="welcome-modal" aria-hidden="true">
+      <div class="modal-card">
+        <button class="modal-close" id="modal-close-btn" aria-label="Close modal">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        <h3 class="modal-title">Welcome to the Club</h3>
+        <p class="modal-sub">Direct Link to our Trading Archive containing all sources.</p>
+        <a href="https://drive.google.com/drive/folders/1ijbGBbKA8S5rG8c2mlqVQnaPFr_XNVcg?usp=sharing" target="_blank" rel="noopener noreferrer" class="modal-drive-btn">
+          <svg viewBox="0 0 512 512" width="22" height="22" style="flex-shrink: 0;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Google Drive" width="22" height="22" style="flex-shrink: 0;" />
+          Drive Link
+        </a>
+      </div>
+    </div>
   </main>
 
   <footer class="footer">
